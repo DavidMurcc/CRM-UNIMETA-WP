@@ -635,3 +635,675 @@ table tbody tr:hover {
 .mb-20 {
     margin-bottom: 20px;
 }
+
+/* ========================================
+   PÁGINA LEADS - ESTILOS ESPECÍFICOS
+   Gestión del listado y detalles de leads
+   con edición de información y trazabilidad
+   ======================================== */
+
+/* CONTENEDOR PRINCIPAL - LEADS
+   Distribuye el layout en dos columnas:
+   - Columna izquierda: Panel de información del lead (350px)
+   - Columna derecha: Trazabilidad (timeline) - ancho flexible
+   Rol: Estructura base del layout de detalles del lead
+*/
+.leads-container {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 30px;
+    height: calc(100vh - 120px);
+}
+
+/* ========================================
+   VISTA DE LISTADO DE LEADS
+   Muestra tabla con todos los leads disponibles
+   ======================================== */
+
+/* CONTENEDOR DEL LISTADO
+   Rol: Wrapper para la vista inicial del módulo de leads
+   Muestra la tabla de leads antes de seleccionar uno
+*/
+.leads-list-view {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 120px);
+    background: white;
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+
+/* ENCABEZADO DEL LISTADO
+   Rol: Héader con título y descripción de la vista
+   Título: "Listado de Leads"
+   Descripción: "Selecciona un lead para ver su hoja de vida"
+*/
+.leads-list-header {
+    padding: 30px;
+    border-bottom: 2px solid var(--color-primary);
+    flex-shrink: 0;
+}
+
+.leads-list-header h2 {
+    font-size: 20px;
+    color: var(--color-text);
+    margin-bottom: 5px;
+}
+
+.leads-list-header p {
+    font-size: 13px;
+    color: var(--color-text-lighter);
+}
+
+/* TABLA DE LEADS
+   Rol: Contenedor scrollable con la tabla de leads
+   Flex: 1 para ocupar el espacio disponible
+   Overflow-y: auto para desplazamiento vertical
+*/
+.leads-list-table {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.leads-list-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.leads-list-table thead tr {
+    background: #f9f9f9;
+    position: sticky;
+    top: 0;
+}
+
+.leads-list-table th {
+    padding: 18px 20px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.leads-list-table tbody tr {
+    border-bottom: 1px solid var(--color-border);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.leads-list-table tbody tr:hover {
+    background: #f0f8ff;
+    box-shadow: inset 4px 0 0 var(--color-primary);
+}
+
+.leads-list-table td {
+    padding: 18px 20px;
+    vertical-align: middle;
+}
+
+/* AVATAR EN LISTADO
+   Rol: Mostrar iniciales del nombre del lead
+   Estilo: Círculo con gradiente rojo
+*/
+.lead-list-avatar {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.lead-list-name {
+    font-weight: 600;
+    color: var(--color-text);
+    font-size: 14px;
+    margin-bottom: 3px;
+}
+
+.lead-list-phone {
+    font-size: 12px;
+    color: var(--color-text-lighter);
+}
+
+.lead-list-program {
+    font-size: 13px;
+    color: var(--color-text);
+}
+
+.lead-list-city {
+    font-size: 12px;
+    color: var(--color-text-lighter);
+}
+
+.lead-list-status {
+    text-align: center;
+}
+
+.lead-list-icon {
+    font-size: 18px;
+    color: var(--color-primary);
+}
+
+/* ========================================
+   VISTA DE DETALLES DEL LEAD
+   Muestra formulario y trazabilidad
+   ======================================== */
+
+/* VISTA DETALLES
+   Rol: Wrapper para la vista de hoja de vida del lead
+   Display: none por defecto, se activa al hacer click
+*/
+.lead-detail-view {
+    display: none;
+    flex-direction: column;
+    height: calc(100vh - 120px);
+}
+
+.lead-detail-view.active {
+    display: flex;
+}
+
+/* BOTÓN VOLVER AL LISTADO
+   Rol: Navegar desde detalles hacia listado
+   Estilo: Botón secundario con borde rojo
+   Texto: "Volver al Listado" con icono de flecha
+*/
+.btn-back-to-list {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 15px;
+    background: transparent;
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary);
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 15px;
+    width: fit-content;
+}
+
+.btn-back-to-list:hover {
+    background: rgba(196, 30, 58, 0.05);
+}
+
+/* ========================================
+   PANEL IZQUIERDO - INFORMACIÓN DEL LEAD
+   Formulario editable con datos personales
+   ======================================== */
+
+/* CONTENEDOR DEL PANEL
+   Rol: Wrapper del panel de información a la izquierda
+   Posición: Sticky para mantenerse visible al scroll
+   Max-height: Limita altura con scroll interno
+*/
+.lead-info-panel {
+    background: white;
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    padding: 25px;
+    height: fit-content;
+    position: sticky;
+    top: 100px;
+    overflow-y: auto;
+    max-height: calc(100vh - 140px);
+}
+
+/* SECCIÓN DE AVATAR Y NOMBRE
+   Rol: Mostrar información básica del lead (avatar, nombre, programa)
+   Incluye: Avatar circular, nombre completo, programa académico
+*/
+.lead-avatar-section {
+    text-align: center;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+/* AVATAR CIRCULAR GRANDE
+   Rol: Mostrar iniciales del nombre con degradado
+   Se actualiza automáticamente al editar nombres
+   Tamaño: 70x70 px
+*/
+.lead-avatar-large {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: bold;
+    margin: 0 auto 12px;
+    box-shadow: var(--shadow-sm);
+}
+
+.lead-name-display {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.lead-program-display {
+    font-size: 12px;
+    color: var(--color-text-lighter);
+    margin-top: 4px;
+}
+
+/* GRUPOS DE FORMULARIO
+   Rol: Agrupar etiqueta + input en cada campo
+   Agrupa: Nombres, Apellidos, Programa, Cédula, Celular, Correo
+*/
+.form-group {
+    margin-bottom: 18px;
+}
+
+/* ETIQUETAS DE FORMULARIO
+   Rol: Mostrar nombre del campo con icono descriptivo
+   Estilo: Mayúsculas, con icono rojo a la izquierda
+*/
+.form-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+}
+
+.form-label i {
+    color: var(--color-primary);
+    font-size: 13px;
+}
+
+/* CAMPOS DE ENTRADA (input)
+   Rol: Inputs deshabilitados por defecto, se habilitan en modo edición
+   Estados: disabled (gris) / focused (borde rojo con sombra)
+*/
+.form-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    font-size: 13px;
+    font-family: var(--font-main);
+    transition: var(--transition);
+    color: var(--color-text);
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(196, 30, 58, 0.1);
+}
+
+.form-input:disabled {
+    background: #f5f5f5;
+    color: var(--color-text-lighter);
+}
+
+/* CONTENEDOR DE BOTONES DE ACCIÓN
+   Rol: Agrupar botones: Editar, Guardar, Cancelar
+   Flex: 1 para distribuir equitativamente
+*/
+.form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* BOTÓN BASE
+   Rol: Estilos comunes para todos los botones
+   Incluye: Padding, border-radius, transiciones suaves
+*/
+.btn {
+    flex: 1;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* BOTÓN PRIMARIO (Guardar)
+   Rol: Guardar cambios en el formulario
+   Estilo: Gradiente rojo, texto blanco
+   Display: block solo en modo edición
+*/
+.btn-primary {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* BOTÓN SECUNDARIO (Cancelar)
+   Rol: Cancelar modo edición y revertir cambios
+   Estilo: Fondo gris claro, texto oscuro
+   Display: block solo en modo edición
+*/
+.btn-secondary {
+    background: var(--color-border);
+    color: var(--color-text);
+}
+
+.btn-secondary:hover {
+    background: #ddd;
+}
+
+/* BOTÓN EDITAR
+   Rol: Activar modo edición del formulario
+   Estilo: Fondo transparente con borde rojo
+   Display: block por defecto, se oculta en modo edición
+*/
+.btn-edit {
+    background: transparent;
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary);
+    flex: 1;
+}
+
+.btn-edit:hover {
+    background: rgba(196, 30, 58, 0.05);
+}
+
+/* ========================================
+   PANEL DERECHO - TRAZABILIDAD/TIMELINE
+   Historial cronológico de actividades con el lead
+   ======================================== */
+
+/* SECCIÓN DE TIMELINE
+   Rol: Mostrar historial de actividades (correos, llamadas, notas)
+   Posición: Columna derecha del grid leads-container
+   Scroll: Vertical para ver más actividades
+*/
+.lead-timeline {
+    background: white;
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    padding: 30px;
+    overflow-y: auto;
+}
+
+/* ENCABEZADO DEL TIMELINE
+   Rol: Título "Trazabilidad" con descripción
+   Borde inferior rojo que separa del contenido
+*/
+.timeline-header {
+    margin-bottom: 30px;
+    border-bottom: 2px solid var(--color-primary);
+    padding-bottom: 15px;
+}
+
+.timeline-header h2 {
+    font-size: 20px;
+    color: var(--color-text);
+    margin-bottom: 5px;
+}
+
+.timeline-header p {
+    font-size: 13px;
+    color: var(--color-text-lighter);
+}
+
+/* LISTA DE EVENTOS (TIMELINE)
+   Rol: Contenedor de todos los eventos/actividades
+   Línea vertical: Pseudo-elemento ::before conecta todos los eventos
+   Padding: 30px a la izquierda para el espacio de la línea
+*/
+.timeline-list {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline-list::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, var(--color-primary), var(--color-primary-light));
+}
+
+/* CADA EVENTO EN LA TRAZABILIDAD
+   Rol: Representa un evento individual (correo, llamada, nota, etc.)
+   Posición relativa para posicionar el indicador/círculo
+*/
+.timeline-item {
+    margin-bottom: 25px;
+    position: relative;
+}
+
+/* PUNTO INDICADOR DEL EVENTO
+   Rol: Círculo que aparece al lado de cada evento
+   Color varía según el tipo: email (rojo), contact (verde), call (azul), note (naranja)
+   Posicionamiento: left -39px, top 5px
+*/
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    background: white;
+    border: 3px solid var(--color-primary);
+    border-radius: 50%;
+    left: -39px;
+    top: 5px;
+}
+
+/* COLORES POR TIPO DE EVENTO
+   email: Rojo (#c41e3a) - Correos enviados
+   contact: Verde (#27ae60) - Contactos/visitas
+   call: Azul (#3498db) - Llamadas telefónicas
+   note: Naranja (#f39c12) - Notas agregadas
+*/
+.timeline-item.email::before {
+    border-color: var(--color-primary);
+    background: var(--color-primary);
+}
+
+.timeline-item.contact::before {
+    border-color: var(--color-secondary);
+    background: var(--color-secondary);
+}
+
+.timeline-item.call::before {
+    border-color: var(--color-info);
+    background: var(--color-info);
+}
+
+.timeline-item.note::before {
+    border-color: var(--color-warning);
+    background: var(--color-warning);
+}
+
+/* CONTENIDO DEL EVENTO
+   Rol: Caja con la información detallada del evento
+   Borde izquierdo de color que varía según el tipo de evento
+   Fondo gris claro para mejor legibilidad
+*/
+.timeline-content {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid var(--color-primary);
+}
+
+.timeline-item.contact .timeline-content {
+    border-left-color: var(--color-secondary);
+}
+
+.timeline-item.call .timeline-content {
+    border-left-color: var(--color-info);
+}
+
+.timeline-item.note .timeline-content {
+    border-left-color: var(--color-warning);
+}
+
+/* TIEMPO DEL EVENTO
+   Rol: Mostrar fecha y hora del evento (ej: "Hoy, 14:30")
+   Icono descriptivo del tipo de actividad
+*/
+.timeline-time {
+    font-size: 11px;
+    color: var(--color-text-lighter);
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* TÍTULO DEL EVENTO
+   Rol: Encabezado principal del evento
+   Ejemplo: "Correo de Bienvenida Enviado"
+   Font-weight: 600 para mayor énfasis
+*/
+.timeline-title {
+    font-weight: 600;
+    color: var(--color-text);
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+/* DESCRIPCIÓN DEL EVENTO
+   Rol: Texto explicativo de lo sucedido en la actividad
+   Línea-height: 1.5 para mejor legibilidad
+*/
+.timeline-description {
+    font-size: 13px;
+    color: var(--color-text-light);
+    line-height: 1.5;
+}
+
+/* INFORMACIÓN ADICIONAL DEL EVENTO
+   Rol: Datos complementarios (usuario responsable, duración, etiquetas)
+   Ejemplo: "Por Admin | Automático | 15 min"
+   Display: flex con wrap para ajustar a varias líneas
+*/
+.timeline-meta {
+    font-size: 12px;
+    color: var(--color-text-lighter);
+    margin-top: 8px;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.timeline-meta span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* ========================================
+   SCROLLBARS PERSONALIZADAS
+   Estilo de la barra de desplazamiento
+   ======================================== */
+.lead-timeline::-webkit-scrollbar,
+.lead-info-panel::-webkit-scrollbar,
+.leads-list-table::-webkit-scrollbar {
+    width: 6px;
+}
+
+.lead-timeline::-webkit-scrollbar-thumb,
+.lead-info-panel::-webkit-scrollbar-thumb,
+.leads-list-table::-webkit-scrollbar-thumb {
+    background: #ddd;
+    border-radius: 3px;
+}
+
+.lead-timeline::-webkit-scrollbar-thumb:hover,
+.lead-info-panel::-webkit-scrollbar-thumb:hover,
+.leads-list-table::-webkit-scrollbar-thumb:hover {
+    background: #999;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN - LEADS
+   Adaptaciones para tablets y móviles
+   ======================================== */
+@media (max-width: 1024px) {
+    .leads-container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        height: auto;
+    }
+
+    .lead-info-panel {
+        position: relative;
+        top: 0;
+        max-height: none;
+    }
+
+    .leads-list-table td {
+        padding: 15px 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .leads-container {
+        gap: 15px;
+    }
+
+    .lead-info-panel {
+        padding: 20px;
+    }
+
+    .form-label {
+        font-size: 11px;
+    }
+
+    .form-input {
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+
+    .leads-list-header {
+        padding: 20px;
+    }
+
+    .leads-list-table th {
+        font-size: 11px;
+        padding: 12px 10px;
+    }
+
+    .leads-list-table td {
+        padding: 12px 15px;
+        font-size: 12px;
+    }
+
+    .lead-list-name {
+        font-size: 13px;
+    }
+
+    .lead-list-program {
+        display: none;
+    }
+}

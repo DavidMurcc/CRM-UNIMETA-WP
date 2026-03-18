@@ -367,3 +367,319 @@ window.CRM = {
     setStorageValue,
     handleNavigation,
 };
+
+/* ========================================
+   MÓDULO DE LEADS - GESTIÓN DE LEADS
+   Funcionalidad para listado, edición y trazabilidad
+   ======================================== */
+
+/**
+ * GESTIÓN DEL MÓDULO DE LEADS
+ * 
+ * Rol: Controlar la navegación entre vistas (listado ↔ detalles)
+ * y la edición de información de leads
+ * 
+ * Funciones principales:
+ * - initLeadsModule(): Inicializa eventos y listeners
+ * - switchToDetailView(): Muestra vista de detalles de un lead
+ * - switchToListView(): Vuelve a la vista del listado
+ * - enableEditMode(): Activa modo edición del formulario
+ * - disableEditMode(): Desactiva modo edición y revierte cambios
+ * - saveLeadChanges(): Guarda cambios del lead
+ */
+
+/**
+ * Inicializa el módulo de leads
+ * Agrega event listeners a elementos de la página
+ * Rol: Configurar interacciones entre listado y detalles
+ */
+function initLeadsModule() {
+    // Elementos del DOM
+    const leadsListView = document.getElementById('leadsListView');
+    const leadDetailView = document.getElementById('leadDetailView');
+    const leadListRows = document.querySelectorAll('.lead-list-row');
+    const backToListBtn = document.getElementById('backToListBtn');
+    const pageTitle = document.getElementById('pageTitle');
+    
+    // Verificar que existamos en página de leads
+    if (!leadsListView || !leadDetailView) {
+        return; // No estamos en la página de leads
+    }
+
+    // ==========================================
+    // EVENTO: Click en un lead del listado
+    // Rol: Cargar datos del lead y mostrar vista de detalles
+    // ==========================================
+    leadListRows.forEach(row => {
+        row.addEventListener('click', () => {
+            const leadId = row.dataset.leadId;
+            const leadName = row.dataset.leadName;
+            const leadLastname = row.dataset.leadLastname;
+            const leadPhone = row.dataset.leadPhone;
+            const leadProgram = row.dataset.leadProgram;
+            const leadCedula = row.dataset.leadCedula;
+            const leadEmail = row.dataset.leadEmail;
+
+            // Cargar datos en el formulario
+            document.getElementById('nombres').value = leadName;
+            document.getElementById('apellidos').value = leadLastname;
+            document.getElementById('programa').value = leadProgram;
+            document.getElementById('celular').value = leadPhone;
+            document.getElementById('cedula').value = leadCedula;
+            document.getElementById('correo').value = leadEmail;
+
+            // Actualizar avatar y nombre en la vista
+            const initials = (leadName.charAt(0) + leadLastname.charAt(0)).toUpperCase();
+            document.getElementById('leadAvatar').textContent = initials;
+            document.getElementById('leadNameDisplay').textContent = `${leadName} ${leadLastname}`;
+            document.getElementById('leadProgramDisplay').textContent = leadProgram;
+
+            // Cambiar de vista (listado → detalles)
+            leadsListView.style.display = 'none';
+            leadDetailView.classList.add('active');
+            
+            // Actualizar título de página
+            if (pageTitle) {
+                pageTitle.textContent = `Hoja de Vida - ${leadName} ${leadLastname}`;
+            }
+
+            // Resetear modo edición a lectura
+            disableEditMode();
+        });
+    });
+
+    // ==========================================
+    // EVENTO: Botón volver al listado
+    // Rol: Volver desde vista de detalles a listado
+    // ==========================================
+    if (backToListBtn) {
+        backToListBtn.addEventListener('click', () => {
+            leadsListView.style.display = 'flex';
+            leadDetailView.classList.remove('active');
+            
+            if (pageTitle) {
+                pageTitle.textContent = 'Leads';
+            }
+        });
+    }
+
+    // Inicializar funciones de edición
+    initLeadsFormEditing();
+}
+
+/**
+ * Inicializa los eventos de edición del formulario de leads
+ * Rol: Controlar botones Editar, Guardar, Cancelar
+ */
+function initLeadsFormEditing() {
+    let isEditMode = false;
+    const editBtn = document.getElementById('editBtn');
+    const saveBtn = document.getElementById('saveBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const leadForm = document.getElementById('leadForm');
+    const inputs = document.querySelectorAll('.form-input');
+
+    // Verificar que existan los elementos
+    if (!editBtn || !saveBtn || !cancelBtn || !leadForm) {
+        return;
+    }
+
+    // Guardar valores originales para cancelación
+    const originalValues = {};
+    inputs.forEach(input => {
+        originalValues[input.id] = input.value;
+    });
+
+    // ==========================================
+    // EVENTO: Botón Editar
+    // Rol: Activar modo edición (habilitar inputs)
+    // ==========================================
+    editBtn.addEventListener('click', () => {
+        isEditMode = true;
+        
+        // Activar todos los inputs
+        inputs.forEach(input => input.disabled = false);
+        
+        // Mostrar/ocultar botones
+        editBtn.style.display = 'none';
+        saveBtn.style.display = 'flex';
+        cancelBtn.style.display = 'flex';
+    });
+
+    // ==========================================
+    // EVENTO: Botón Cancelar
+    // Rol: Desactivar modo edición y revertir cambios
+    // ==========================================
+    cancelBtn.addEventListener('click', () => {
+        isEditMode = false;
+        
+        // Restaurar valores originales
+        inputs.forEach(input => {
+            input.disabled = true;
+            input.value = originalValues[input.id];
+        });
+        
+        // Mostrar/ocultar botones
+        editBtn.style.display = 'flex';
+        saveBtn.style.display = 'none';
+        cancelBtn.style.display = 'none';
+
+        // Actualizar visualización (avatar y nombre)
+        updateLeadDisplay();
+    });
+
+    // ==========================================
+    // EVENTO: Envío del formulario (Guardar)
+    // Rol: Guardar cambios en los datos del lead
+    // ==========================================
+    leadForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        // Preparar datos para enviar
+        const formData = {
+            leadId: document.querySelector('.lead-list-row.active')?.dataset.leadId || 1,
+            nombres: document.getElementById('nombres').value,
+            apellidos: document.getElementById('apellidos').value,
+            programa: document.getElementById('programa').value,
+            cedula: document.getElementById('cedula').value,
+            celular: document.getElementById('celular').value,
+            correo: document.getElementById('correo').value,
+        };
+
+        console.log('✓ Datos del lead guardados:', formData);
+
+        // Actualizar valores originales
+        Object.keys(formData).forEach(key => {
+            if (originalValues.hasOwnProperty(key)) {
+                originalValues[key] = formData[key];
+            }
+        });
+
+        // Desactivar modo edición
+        isEditMode = false;
+        inputs.forEach(input => input.disabled = true);
+        editBtn.style.display = 'flex';
+        saveBtn.style.display = 'none';
+        cancelBtn.style.display = 'none';
+
+        // Mostrar notificación de éxito
+        alert('✓ Los cambios han sido guardados correctamente');
+    });
+
+    // ==========================================
+    // EVENTO: Cambios en inputs (nombres, apellidos, programa)
+    // Rol: Actualizar avatar y nombre en tiempo real
+    // ==========================================
+    document.getElementById('nombres').addEventListener('input', updateLeadDisplay);
+    document.getElementById('apellidos').addEventListener('input', updateLeadDisplay);
+    document.getElementById('programa').addEventListener('input', updateLeadDisplay);
+}
+
+/**
+ * Actualiza la visualización del lead (avatar, nombre, programa)
+ * Rol: Reflejar cambios en tiempo real durante la edición
+ * 
+ * Actualiza:
+ * - Avatar: Iniciales del nombre y apellido
+ * - Nombre: Nombre completo actualizado
+ * - Programa: Programa académico actualizado
+ */
+function updateLeadDisplay() {
+    const nombres = document.getElementById('nombres')?.value || '';
+    const apellidos = document.getElementById('apellidos')?.value || '';
+    const programa = document.getElementById('programa')?.value || '';
+
+    // Actualizar nombre y programa
+    const nameDisplay = document.getElementById('leadNameDisplay');
+    const programDisplay = document.getElementById('leadProgramDisplay');
+    const avatar = document.getElementById('leadAvatar');
+
+    if (nameDisplay) nameDisplay.textContent = `${nombres} ${apellidos}`;
+    if (programDisplay) programDisplay.textContent = programa;
+
+    // Actualizar iniciales del avatar
+    if (avatar) {
+        const initials = (nombres.charAt(0) + apellidos.charAt(0)).toUpperCase();
+        avatar.textContent = initials;
+    }
+}
+
+/**
+ * Desactiva el modo edición del formulario
+ * Rol: Auxiliar para deshabilitar edición (usado al cargar un lead)
+ */
+function disableEditMode() {
+    const editBtn = document.getElementById('editBtn');
+    const saveBtn = document.getElementById('saveBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const inputs = document.querySelectorAll('.form-input');
+
+    if (editBtn) editBtn.style.display = 'flex';
+    if (saveBtn) saveBtn.style.display = 'none';
+    if (cancelBtn) cancelBtn.style.display = 'none';
+    
+    inputs.forEach(input => input.disabled = true);
+}
+
+/* ========================================
+   INICIALIZACIÓN - EXTENSIONES
+   Agregar módulos adicionales
+   ======================================== */
+
+/**
+ * Extensión de initCRM para incluir módulo de leads
+ */
+const originalInitCRM = window.CRM?.initCRM || initCRM;
+
+// Reemplazar initCRM para incluir leads
+const newInitCRM = function() {
+    // Llamar a inicio original
+    console.log('Inicializando CRM...');
+
+    // Inicializar componentes globales
+    initSidebar();
+    initResponsiveListener();
+    applyDynamicStyles();
+
+    // Inicializar módulo de leads (si estamos en página de leads)
+    if (document.getElementById('leadsListView')) {
+        initLeadsModule();
+    }
+
+    // Agregar estilos de animación si no existen
+    if (!document.getElementById('animation-styles')) {
+        const style = document.createElement('style');
+        style.id = 'animation-styles';
+        style.textContent = `
+            @keyframes pulse {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.1); }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    console.log('✓ CRM inicializado correctamente');
+};
+
+// Actualizar initCRM global
+window.initCRM = newInitCRM;
+
+/**
+ * Evento cuando el DOM está listo
+ */
+document.addEventListener('DOMContentLoaded', () => {
+    window.initCRM();
+
+    // Ejemplo: Actualizar notificaciones después de 2 segundos
+    setTimeout(() => {
+        // updateNotificationBadge(5);
+    }, 2000);
+});
+
+/**
+ * Agregar funciones de leads a objeto CRM global
+ */
+window.CRM.initLeadsModule = initLeadsModule;
+window.CRM.updateLeadDisplay = updateLeadDisplay;
+window.CRM.disableEditMode = disableEditMode;
