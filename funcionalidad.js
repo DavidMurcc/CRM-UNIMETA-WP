@@ -26,8 +26,6 @@ function initSidebar() {
     // Navegar entre elementos
     navItems.forEach((item) => {
         item.addEventListener('click', (e) => {
-            e.preventDefault();
-
             // Remover clase active de todos los items
             navItems.forEach((nav) => nav.classList.remove('active'));
 
@@ -39,7 +37,15 @@ function initSidebar() {
                 sidebar.classList.remove('active');
             }
 
-            // Aquí puedes agregar lógica de navegación
+            // Si el item tiene un href válido, permitir la navegación hacia allí
+            const href = item.getAttribute('href');
+            if (href && href !== '#') {
+                // Permitir navegación natural al hacer clic
+                return true;
+            }
+
+            // Si no tiene href válido, prevenir comportamiento por defecto
+            e.preventDefault();
             handleNavigation(item.textContent.trim());
         });
     });
@@ -465,6 +471,9 @@ function initLeadsModule() {
 
     // Inicializar funciones de edición
     initLeadsFormEditing();
+    
+    // Inicializar función de crear nuevo lead
+    initCreateLeadForm();
 }
 
 /**
@@ -621,6 +630,214 @@ function disableEditMode() {
     inputs.forEach(input => input.disabled = true);
 }
 
+/**
+ * Inicializa la función de crear nuevo lead
+ * Rol: Manejar formulario para crear leads desde cero en un modal
+ */
+function initCreateLeadForm() {
+    // Elementos del DOM
+    const createLeadBtn = document.getElementById('createLeadBtn');
+    const leadCreateModal = document.getElementById('leadCreateModal');
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalCloseBtn = document.getElementById('modalCloseBtn');
+    const leadFormCreate = document.getElementById('leadFormCreate');
+    const saveBtnCreate = document.getElementById('saveBtnCreate');
+    const cancelBtnCreate = document.getElementById('cancelBtnCreate');
+
+    // Campos del formulario de creación
+    const nombresInput = document.getElementById('nombres_create');
+    const apellidosInput = document.getElementById('apellidos_create');
+    const programaSelect = document.getElementById('programa_create');
+    const cedulaInput = document.getElementById('cedula_create');
+    const celularInput = document.getElementById('celular_create');
+    const correoInput = document.getElementById('correo_create');
+
+    // Verificar que existan los elementos
+    if (!createLeadBtn || !leadCreateModal) {
+        return;
+    }
+
+    // Función para abrir el modal
+    const openModal = () => {
+        // Limpiar formulario
+        if (leadFormCreate) leadFormCreate.reset();
+        document.getElementById('newLeadAvatar').textContent = '--';
+        document.getElementById('newLeadName').textContent = 'Nuevo Lead';
+        document.getElementById('newLeadProgram').textContent = 'Ingrese los datos';
+
+        // Mostrar modal
+        leadCreateModal.classList.add('active');
+
+        // Enfocar en el primer campo
+        if (nombresInput) nombresInput.focus();
+    };
+
+    // Función para cerrar el modal
+    const closeModal = () => {
+        leadCreateModal.classList.remove('active');
+    };
+
+    // ==========================================
+    // EVENTO: Botón Crear Lead
+    // Rol: Abrir modal de creación
+    // ==========================================
+    createLeadBtn.addEventListener('click', openModal);
+
+    // ==========================================
+    // EVENTO: Botón Cerrar Modal (X)
+    // Rol: Cerrar el modal
+    // ==========================================
+    if (modalCloseBtn) {
+        modalCloseBtn.addEventListener('click', closeModal);
+    }
+
+    // ==========================================
+    // EVENTO: Hacer clic en el overlay
+    // Rol: Cerrar el modal al hacer clic fuera
+    // ==========================================
+    if (modalOverlay) {
+        modalOverlay.addEventListener('click', closeModal);
+    }
+
+    // ==========================================
+    // EVENTO: Botón Cancelar en formulario
+    // Rol: Cerrar el modal sin guardar
+    // ==========================================
+    if (cancelBtnCreate) {
+        cancelBtnCreate.addEventListener('click', closeModal);
+    }
+
+    // ==========================================
+    // EVENTO: Actualizar vista previa mientras se escribe
+    // Rol: Mostrar en tiempo real los datos que se están ingresando
+    // ==========================================
+    const updateNewLeadDisplay = () => {
+        const nombres = nombresInput?.value || '';
+        const apellidos = apellidosInput?.value || '';
+        const programa = programaSelect?.value || 'Selecciona un programa';
+
+        document.getElementById('newLeadName').textContent = nombres && apellidos 
+            ? `${nombres} ${apellidos}`
+            : 'Nuevo Lead';
+        document.getElementById('newLeadProgram').textContent = programa;
+
+        // Actualizar avatar con iniciales
+        const avatar = document.getElementById('newLeadAvatar');
+        if (nombres || apellidos) {
+            const initials = ((nombres.charAt(0) || '') + (apellidos.charAt(0) || '')).toUpperCase();
+            avatar.textContent = initials;
+        } else {
+            avatar.textContent = '--';
+        }
+    };
+
+    // Agregar listeners para actualización en tiempo real
+    if (nombresInput) nombresInput.addEventListener('input', updateNewLeadDisplay);
+    if (apellidosInput) apellidosInput.addEventListener('input', updateNewLeadDisplay);
+    if (programaSelect) programaSelect.addEventListener('change', updateNewLeadDisplay);
+
+    // ==========================================
+    // EVENTO: Enviar formulario (Crear Lead)
+    // Rol: Guardar nuevo lead en la lista
+    // ==========================================
+    if (leadFormCreate) {
+        leadFormCreate.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            // Validar que los campos requeridos estén llenos
+            if (!nombresInput.value.trim()) {
+                alert('Por favor ingresa el nombre');
+                return;
+            }
+            if (!apellidosInput.value.trim()) {
+                alert('Por favor ingresa el apellido');
+                return;
+            }
+            if (!programaSelect.value) {
+                alert('Por favor selecciona un programa');
+                return;
+            }
+
+            // Crear nuevo lead con los datos ingresados
+            const newLeadName = nombresInput.value.trim();
+            const newLeadLastname = apellidosInput.value.trim();
+            const newLeadProgram = programaSelect.value;
+            const newLeadCedula = cedulaInput.value.trim();
+            const newLeadCelular = celularInput.value.trim();
+            const newLeadCorreo = correoInput.value.trim();
+
+            // Generar ID único (en una aplicación real vendría del servidor)
+            const newLeadId = Math.max(...Array.from(document.querySelectorAll('.lead-list-row'))
+                .map(row => parseInt(row.dataset.leadId) || 0), 0) + 1;
+
+            // Crear nueva fila en la tabla
+            const tableBody = document.querySelector('.leads-list-table tbody');
+            const initials = (newLeadName.charAt(0) + newLeadLastname.charAt(0)).toUpperCase();
+
+            const newRow = document.createElement('tr');
+            newRow.className = 'lead-list-row';
+            newRow.dataset.leadId = newLeadId;
+            newRow.dataset.leadName = newLeadName;
+            newRow.dataset.leadLastname = newLeadLastname;
+            newRow.dataset.leadProgram = newLeadProgram;
+            newRow.dataset.leadCedula = newLeadCedula;
+            newRow.dataset.leadPhone = newLeadCelular;
+            newRow.dataset.leadEmail = newLeadCorreo;
+
+            newRow.innerHTML = `
+                <td class="lead-list-avatar">${initials}</td>
+                <td>
+                    <div class="lead-list-name">${newLeadName} ${newLeadLastname}</div>
+                    <div class="lead-list-phone">${newLeadCelular}</div>
+                </td>
+                <td class="lead-list-program">${newLeadProgram}</td>
+                <td class="lead-list-city"></td>
+                <td class="lead-list-status">
+                    <span class="status-badge status-nuevo"><i class="lead-list-icon fas fa-star\"></i></span>
+                </td>
+            `;
+
+            // Agregar nueva fila a la tabla
+            tableBody.appendChild(newRow);
+
+            // Agregar evento click al nuevo lead
+            newRow.addEventListener('click', () => {
+                // Código para cargar el nuevo lead
+                const leadsListView = document.getElementById('leadsListView');
+                const leadDetailView = document.getElementById('leadDetailView');
+                
+                document.getElementById('nombres').value = newLeadName;
+                document.getElementById('apellidos').value = newLeadLastname;
+                document.getElementById('programa').value = newLeadProgram;
+                document.getElementById('celular').value = newLeadCelular;
+                document.getElementById('cedula').value = newLeadCedula;
+                document.getElementById('correo').value = newLeadCorreo;
+
+                const initls = (newLeadName.charAt(0) + newLeadLastname.charAt(0)).toUpperCase();
+                document.getElementById('leadAvatar').textContent = initls;
+                document.getElementById('leadNameDisplay').textContent = `${newLeadName} ${newLeadLastname}`;
+                document.getElementById('leadProgramDisplay').textContent = newLeadProgram;
+
+                leadsListView.style.display = 'none';
+                leadDetailView.classList.add('active');
+
+                const pageTitle = document.getElementById('pageTitle');
+                if (pageTitle) {
+                    pageTitle.textContent = `Hoja de Vida - ${newLeadName} ${newLeadLastname}`;
+                }
+
+                disableEditMode();
+            });
+
+            // Mostrar mensaje de éxito
+            alert(`Lead "${newLeadName} ${newLeadLastname}" creado exitosamente`);
+
+            // Cerrar modal
+            closeModal();
+        });
+    }
+}
+
 /* ========================================
    INICIALIZACIÓN - EXTENSIONES
    Agregar módulos adicionales
@@ -683,3 +900,4 @@ document.addEventListener('DOMContentLoaded', () => {
 window.CRM.initLeadsModule = initLeadsModule;
 window.CRM.updateLeadDisplay = updateLeadDisplay;
 window.CRM.disableEditMode = disableEditMode;
+window.CRM.initCreateLeadForm = initCreateLeadForm;

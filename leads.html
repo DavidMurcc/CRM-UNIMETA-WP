@@ -89,8 +89,15 @@
             <div class="leads-list-view" id="leadsListView">
                 <!-- ENCABEZADO DEL LISTADO -->
                 <div class="leads-list-header">
-                    <h2><i class="fas fa-list"></i> Listado de Leads</h2>
-                    <p>Selecciona un lead para ver su hoja de vida</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h2><i class="fas fa-list"></i> Listado de Leads</h2>
+                            <p>Selecciona un lead para ver su hoja de vida</p>
+                        </div>
+                        <button class="btn btn-primary" id="createLeadBtn" style="align-self: flex-start; margin-top: 5px; padding: 6px 10px; font-size: 11px; flex: none; width: auto;">
+                            <i class="fas fa-plus"></i> Crear Lead
+                        </button>
+                    </div>
                 </div>
 
                 <!-- TABLA CON LISTADO DE LEADS -->
@@ -191,6 +198,82 @@
                             </tr>
                         </tbody>
                     </table>
+                </div>
+            </div>
+
+            <!-- MODAL: CREAR NUEVO LEAD
+                 Se muestra como overlay modal al hacer clic en "Crear Lead"
+                 Contiene formulario para capturar datos del nuevo lead
+            -->
+            <div class="lead-create-modal" id="leadCreateModal">
+                <!-- OVERLAY QUE CUBRE LA PANTALLA -->
+                <div class="modal-overlay" id="modalOverlay"></div>
+
+                <!-- CONTENEDOR MODAL -->
+                <div class="modal-content">
+                    <!-- ENCABEZADO DEL MODAL -->
+                    <div class="modal-header">
+                        <h2>Crear Nuevo Lead</h2>
+                        <button class="modal-close" id="modalCloseBtn">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+
+                    <!-- CONTENIDO DEL MODAL -->
+                    <div class="modal-body">
+                        <!-- PANEL PARA AGREGAR NUEVOS DATOS -->
+                        <div class="lead-info-panel-modal">
+                        <div class="lead-avatar-section">
+                            <div class="lead-avatar-large" id="newLeadAvatar" style="background: linear-gradient(135deg, #c41e3a, #8b1428);">--</div>
+                            <div class="lead-name-display" id="newLeadName">Nuevo Lead</div>
+                            <div class="lead-program-display" id="newLeadProgram">Ingrese los datos</div>
+                        </div>
+
+                        <form id="leadFormCreate">
+                            <div class="form-group">
+                                <label class="form-label"><i class="fas fa-user"></i> Nombres</label>
+                                <input type="text" class="form-input" id="nombres_create" placeholder="Ej: Juan Pablo">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label"><i class="fas fa-user"></i> Apellidos</label>
+                                <input type="text" class="form-input" id="apellidos_create" placeholder="Ej: García López">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label"><i class="fas fa-graduation-cap"></i> Programa</label>
+                                <select class="form-input" id="programa_create">
+                                    <option value="">Selecciona un programa</option>
+                                    <option value="Administración de Empresas">Administración de Empresas</option>
+                                    <option value="Ingeniería de Sistemas">Ingeniería de Sistemas</option>
+                                    <option value="Contabilidad">Contabilidad</option>
+                                    <option value="Derecho">Derecho</option>
+                                    <option value="Psicología">Psicología</option>
+                                    <option value="Ingeniería Ambiental">Ingeniería Ambiental</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label"><i class="fas fa-id-card"></i> Cédula</label>
+                                <input type="text" class="form-input" id="cedula_create" placeholder="Ej: 1053847291">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label"><i class="fas fa-mobile-alt"></i> Celular</label>
+                                <input type="tel" class="form-input" id="celular_create" placeholder="Ej: +57 310 456 7890">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label"><i class="fas fa-envelope"></i> Correo</label>
+                                <input type="email" class="form-input" id="correo_create" placeholder="Ej: usuario@email.com">
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary" id="saveBtnCreate">
+                                    <i class="fas fa-save"></i> Crear Lead
+                                </button>
+                                <button type="button" class="btn btn-secondary" id="cancelBtnCreate">
+                                    Cancelar
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    </div>
                 </div>
             </div>
 
