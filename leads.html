@@ -1,21 +1,13 @@
 <!DOCTYPE html>
-<!-- ========================================
-     PÁGINA DE LEADS - CRM UNIMETA
-     Funcionalidad: Gestión de listado de leads y hoja de vida individual
-     con edición de datos personales y trazabilidad de actividades.
-     ======================================== -->
 <html lang="es">
 <head>
-    <!-- Metadatos básicos del documento -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CRM UNIMETA - Leads</title>
-    <!-- Links a librerías externas: Font Awesome para iconos y estilos globales -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="estilos.css">
 </head>
 <body>
-    <!-- SIDEBAR - BARRA LATERAL ROJA -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="phone-icon">
@@ -34,7 +26,7 @@
             </a>
             <a href="#" class="nav-item">
                 <i class="fas fa-comments"></i>
-                <span>Mensajería</span>
+                <span>Mensajeria</span>
             </a>
             <a href="leads.html" class="nav-item active">
                 <i class="fas fa-users"></i>
@@ -46,48 +38,31 @@
             </a>
             <a href="#" class="nav-item">
                 <i class="fas fa-chart-bar"></i>
-                <span>Analíticas</span>
+                <span>Analiticas</span>
             </a>
             <a href="configuracion.html" class="nav-item">
                 <i class="fas fa-cog"></i>
-                <span>Configuración</span>
+                <span>Configuracion</span>
             </a>
         </nav>
     </aside>
 
-    <!-- MAIN CONTENT - CONTENIDO PRINCIPAL  
-         Contiene todo el contenido visible después del sidebar
-         Incluye topbar, trazabilidad y panel de edición
-    -->
     <div class="main-content">
-        <!-- TOP BAR - BARRA SUPERIOR
-             Muestra el título de página, notificaciones y perfil del usuario
-        -->
         <div class="top-bar">
             <h1 class="page-title" id="pageTitle">Leads</h1>
             <div class="top-bar-right">
-                <!-- Icono de notificaciones con badge rojo -->
                 <div class="notification-icon">
                     <i class="fas fa-bell"></i>
                     <span class="notification-badge">2</span>
                 </div>
-                <!-- Avatar del usuario logueado -->
                 <div class="user-profile">
                     <div class="profile-avatar">AC</div>
                 </div>
             </div>
         </div>
 
-        <!-- CONTENT - ÁREA DE CONTENIDO
-             Contiene dos vistas: listado de leads y hoja de vida
-        -->
         <div class="content">
-            <!-- VISTA 1: LISTADO DE LEADS
-                 Se muestra al abrir la página
-                 Contiene tabla con todos los leads disponibles
-            -->
             <div class="leads-list-view" id="leadsListView">
-                <!-- ENCABEZADO DEL LISTADO -->
                 <div class="leads-list-header">
                     <div class="leads-list-header-content">
                         <div>
@@ -100,7 +75,6 @@
                     </div>
                 </div>
 
-                <!-- TABLA CON LISTADO DE LEADS -->
                 <div class="leads-list-table">
                     <table>
                         <thead>
@@ -112,106 +86,15 @@
                                 <th class="th-center">Estado</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <!-- LEAD 1: Maria Camila Rodriguez -->
-                            <tr class="lead-list-row" data-lead-id="1" data-lead-name="Maria Camila" data-lead-lastname="Rodriguez" data-lead-phone="+57 310 456 7890" data-lead-program="Administración de Empresas" data-lead-city="Villavicencio" data-lead-cedula="1053847291" data-lead-email="maria.camila@email.com">
-                                <td class="lead-list-avatar">MC</td>
-                                <td>
-                                    <div class="lead-list-name">Maria Camila Rodriguez</div>
-                                    <div class="lead-list-phone">+57 310 456 7890</div>
-                                </td>
-                                <td class="lead-list-program">Administración de Empresas</td>
-                                <td class="lead-list-city">Villavicencio</td>
-                                <td class="lead-list-status">
-                                    <span class="status-badge status-interesado"><i class="lead-list-icon fas fa-check-circle"></i></span>
-                                </td>
-                            </tr>
-
-                            <!-- LEAD 2: Juan Andrés Martínez -->
-                            <tr class="lead-list-row" data-lead-id="2" data-lead-name="Juan Andrés" data-lead-lastname="Martínez" data-lead-phone="+57 311 234 5678" data-lead-program="Ingeniería de Sistemas" data-lead-city="Acacías" data-lead-cedula="1087654321" data-lead-email="juan.andres@email.com">
-                                <td class="lead-list-avatar">JA</td>
-                                <td>
-                                    <div class="lead-list-name">Juan Andrés Martínez</div>
-                                    <div class="lead-list-phone">+57 311 234 5678</div>
-                                </td>
-                                <td class="lead-list-program">Ingeniería de Sistemas</td>
-                                <td class="lead-list-city">Acacías</td>
-                                <td class="lead-list-status">
-                                    <span class="status-badge status-nuevo"><i class="lead-list-icon fas fa-star"></i></span>
-                                </td>
-                            </tr>
-
-                            <!-- LEAD 3: Laura González Pérez -->
-                            <tr class="lead-list-row" data-lead-id="3" data-lead-name="Laura" data-lead-lastname="González" data-lead-phone="+57 312 567 8901" data-lead-program="Contabilidad" data-lead-city="Puerto López" data-lead-cedula="1023456789" data-lead-email="laura.gonzalez@email.com">
-                                <td class="lead-list-avatar">LG</td>
-                                <td>
-                                    <div class="lead-list-name">Laura González Pérez</div>
-                                    <div class="lead-list-phone">+57 312 567 8901</div>
-                                </td>
-                                <td class="lead-list-program">Contabilidad</td>
-                                <td class="lead-list-city">Puerto López</td>
-                                <td class="lead-list-status">
-                                    <span class="status-badge status-calificado"><i class="lead-list-icon fas fa-check"></i></span>
-                                </td>
-                            </tr>
-
-                            <!-- LEAD 4: Carlos Fernández Ruiz -->
-                            <tr class="lead-list-row" data-lead-id="4" data-lead-name="Carlos" data-lead-lastname="Fernández" data-lead-phone="+57 313 678 9012" data-lead-program="Derecho" data-lead-city="Bogotá" data-lead-cedula="1098765432" data-lead-email="carlos.fernandez@email.com">
-                                <td class="lead-list-avatar">CF</td>
-                                <td>
-                                    <div class="lead-list-name">Carlos Fernández Ruiz</div>
-                                    <div class="lead-list-phone">+57 313 678 9012</div>
-                                </td>
-                                <td class="lead-list-program">Derecho</td>
-                                <td class="lead-list-city">Bogotá</td>
-                                <td class="lead-list-status">
-                                    <span class="status-badge status-interesado"><i class="lead-list-icon fas fa-check-circle"></i></span>
-                                </td>
-                            </tr>
-
-                            <!-- LEAD 5: Sandra López Moreno -->
-                            <tr class="lead-list-row" data-lead-id="5" data-lead-name="Sandra" data-lead-lastname="López" data-lead-phone="+57 314 789 0123" data-lead-program="Psicología" data-lead-city="Villavicencio" data-lead-cedula="1054321098" data-lead-email="sandra.lopez@email.com">
-                                <td class="lead-list-avatar">SL</td>
-                                <td>
-                                    <div class="lead-list-name">Sandra López Moreno</div>
-                                    <div class="lead-list-phone">+57 314 789 0123</div>
-                                </td>
-                                <td class="lead-list-program">Psicología</td>
-                                <td class="lead-list-city">Villavicencio</td>
-                                <td class="lead-list-status">
-                                    <span class="status-badge status-nuevo"><i class="lead-list-icon fas fa-star"></i></span>
-                                </td>
-                            </tr>
-
-                            <!-- LEAD 6: Pedro Alejandro Ruiz -->
-                            <tr class="lead-list-row" data-lead-id="6" data-lead-name="Pedro Alejandro" data-lead-lastname="Ruiz" data-lead-phone="+57 315 890 1234" data-lead-program="Ingeniería Ambiental" data-lead-city="San Martín" data-lead-cedula="1065432109" data-lead-email="pedro.ruiz@email.com">
-                                <td class="lead-list-avatar">PR</td>
-                                <td>
-                                    <div class="lead-list-name">Pedro Alejandro Ruiz</div>
-                                    <div class="lead-list-phone">+57 315 890 1234</div>
-                                </td>
-                                <td class="lead-list-program">Ingeniería Ambiental</td>
-                                <td class="lead-list-city">San Martín</td>
-                                <td class="lead-list-status">
-                                    <span class="status-badge status-interesado"><i class="lead-list-icon fas fa-check-circle"></i></span>
-                                </td>
-                            </tr>
-                        </tbody>
+                        <tbody></tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- MODAL: CREAR NUEVO LEAD
-                 Se muestra como overlay modal al hacer clic en "Crear Lead"
-                 Contiene formulario para capturar datos del nuevo lead
-            -->
             <div class="lead-create-modal" id="leadCreateModal">
-                <!-- OVERLAY QUE CUBRE LA PANTALLA -->
                 <div class="modal-overlay" id="modalOverlay"></div>
 
-                <!-- CONTENEDOR MODAL -->
                 <div class="modal-content">
-                    <!-- ENCABEZADO DEL MODAL -->
                     <div class="modal-header">
                         <h2>Crear Nuevo Lead</h2>
                         <button class="modal-close" id="modalCloseBtn">
@@ -219,110 +102,99 @@
                         </button>
                     </div>
 
-                    <!-- CONTENIDO DEL MODAL -->
                     <div class="modal-body">
-                        <!-- PANEL PARA AGREGAR NUEVOS DATOS -->
                         <div class="lead-info-panel-modal">
-                        <div class="lead-avatar-section">
-                            <div class="lead-avatar-large" id="newLeadAvatar">--</div>
-                            <div class="lead-name-display" id="newLeadName">Nuevo Lead</div>
-                            <div class="lead-program-display" id="newLeadProgram">Ingrese los datos</div>
+                            <div class="lead-avatar-section">
+                                <div class="lead-avatar-large" id="newLeadAvatar">--</div>
+                                <div class="lead-name-display" id="newLeadName">Nuevo Lead</div>
+                                <div class="lead-program-display" id="newLeadProgram">Ingrese los datos</div>
+                            </div>
+
+                            <form id="leadFormCreate">
+                                <div class="form-group">
+                                    <label class="form-label"><i class="fas fa-user"></i> Nombres</label>
+                                    <input type="text" class="form-input" id="nombres_create" placeholder="Ej: Juan Pablo">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label"><i class="fas fa-user"></i> Apellidos</label>
+                                    <input type="text" class="form-input" id="apellidos_create" placeholder="Ej: Garcia Lopez">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label"><i class="fas fa-graduation-cap"></i> Programa</label>
+                                    <select class="form-input" id="programa_create">
+                                        <option value="">Selecciona un programa</option>
+                                        <option value="Administracion de Empresas">Administracion de Empresas</option>
+                                        <option value="Ingenieria de Sistemas">Ingenieria de Sistemas</option>
+                                        <option value="Contabilidad">Contabilidad</option>
+                                        <option value="Derecho">Derecho</option>
+                                        <option value="Psicologia">Psicologia</option>
+                                        <option value="Ingenieria Ambiental">Ingenieria Ambiental</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label"><i class="fas fa-id-card"></i> Cedula</label>
+                                    <input type="text" class="form-input" id="cedula_create" placeholder="Ej: 1053847291">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label"><i class="fas fa-mobile-alt"></i> Celular</label>
+                                    <input type="tel" class="form-input" id="celular_create" placeholder="Ej: +57 310 456 7890">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label"><i class="fas fa-envelope"></i> Correo</label>
+                                    <input type="email" class="form-input" id="correo_create" placeholder="Ej: usuario@email.com">
+                                </div>
+
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary" id="saveBtnCreate">
+                                        <i class="fas fa-save"></i> Crear Lead
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" id="cancelBtnCreate">
+                                        Cancelar
+                                    </button>
+                                </div>
+                            </form>
                         </div>
-
-                        <form id="leadFormCreate">
-                            <div class="form-group">
-                                <label class="form-label"><i class="fas fa-user"></i> Nombres</label>
-                                <input type="text" class="form-input" id="nombres_create" placeholder="Ej: Juan Pablo">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label"><i class="fas fa-user"></i> Apellidos</label>
-                                <input type="text" class="form-input" id="apellidos_create" placeholder="Ej: García López">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label"><i class="fas fa-graduation-cap"></i> Programa</label>
-                                <select class="form-input" id="programa_create">
-                                    <option value="">Selecciona un programa</option>
-                                    <option value="Administración de Empresas">Administración de Empresas</option>
-                                    <option value="Ingeniería de Sistemas">Ingeniería de Sistemas</option>
-                                    <option value="Contabilidad">Contabilidad</option>
-                                    <option value="Derecho">Derecho</option>
-                                    <option value="Psicología">Psicología</option>
-                                    <option value="Ingeniería Ambiental">Ingeniería Ambiental</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label"><i class="fas fa-id-card"></i> Cédula</label>
-                                <input type="text" class="form-input" id="cedula_create" placeholder="Ej: 1053847291">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label"><i class="fas fa-mobile-alt"></i> Celular</label>
-                                <input type="tel" class="form-input" id="celular_create" placeholder="Ej: +57 310 456 7890">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label"><i class="fas fa-envelope"></i> Correo</label>
-                                <input type="email" class="form-input" id="correo_create" placeholder="Ej: usuario@email.com">
-                            </div>
-
-                            <div class="form-actions">
-                                <button type="submit" class="btn btn-primary" id="saveBtn">
-                                    <i class="fas fa-save"></i> Crear Lead
-                                </button>
-                                <button type="button" class="btn btn-secondary" id="cancelBtn">
-                                    Cancelar
-                                </button>
-                            </div>
-                        </form>
-                    </div>
                     </div>
                 </div>
             </div>
 
-            <!-- VISTA 2: HOJA DE VIDA DEL LEAD
-                 Se muestra al seleccionar un lead del listado
-                 Contiene panel de información y trazabilidad
-            -->
             <div class="lead-detail-view" id="leadDetailView">
-                <!-- BOTÓN VOLVER AL LISTADO -->
                 <button class="btn-back-to-list" id="backToListBtn">
                     <i class="fas fa-arrow-left"></i> Volver al Listado
                 </button>
 
-                <!-- CONTENEDOR PRINCIPAL DE LEADS
-                     Grid layout: 2 columnas (izquierda info, derecha timeline)
-                -->
                 <div class="leads-container">
-                    <!-- PANEL IZQUIERDO - INFORMACIÓN -->
                     <div class="lead-info-panel">
                         <div class="lead-avatar-section">
-                            <div class="lead-avatar-large" id="leadAvatar">MC</div>
-                            <div class="lead-name-display" id="leadNameDisplay">Maria Camila Rodriguez</div>
-                            <div class="lead-program-display" id="leadProgramDisplay">Administración de Empresas</div>
+                            <div class="lead-avatar-large" id="leadAvatar">--</div>
+                            <div class="lead-name-display" id="leadNameDisplay">Nuevo Lead</div>
+                            <div class="lead-program-display" id="leadProgramDisplay">Sin programa</div>
                         </div>
 
                         <form id="leadForm">
                             <div class="form-group">
                                 <label class="form-label"><i class="fas fa-user"></i> Nombres</label>
-                                <input type="text" class="form-input" id="nombres" value="Maria Camila" disabled>
+                                <input type="text" class="form-input" id="nombres" value="" disabled>
                             </div>
                             <div class="form-group">
                                 <label class="form-label"><i class="fas fa-user"></i> Apellidos</label>
-                                <input type="text" class="form-input" id="apellidos" value="Rodriguez" disabled>
+                                <input type="text" class="form-input" id="apellidos" value="" disabled>
                             </div>
                             <div class="form-group">
                                 <label class="form-label"><i class="fas fa-graduation-cap"></i> Programa</label>
-                                <input type="text" class="form-input" id="programa" value="Administración de Empresas" disabled>
+                                <input type="text" class="form-input" id="programa" value="" disabled>
                             </div>
                             <div class="form-group">
-                                <label class="form-label"><i class="fas fa-id-card"></i> Cédula</label>
-                                <input type="text" class="form-input" id="cedula" value="1053847291" disabled>
+                                <label class="form-label"><i class="fas fa-id-card"></i> Cedula</label>
+                                <input type="text" class="form-input" id="cedula" value="" disabled>
                             </div>
                             <div class="form-group">
                                 <label class="form-label"><i class="fas fa-mobile-alt"></i> Celular</label>
-                                <input type="tel" class="form-input" id="celular" value="+57 310 456 7890" disabled>
+                                <input type="tel" class="form-input" id="celular" value="" disabled>
                             </div>
                             <div class="form-group">
                                 <label class="form-label"><i class="fas fa-envelope"></i> Correo</label>
-                                <input type="email" class="form-input" id="correo" value="maria.camila@email.com" disabled>
+                                <input type="email" class="form-input" id="correo" value="" disabled>
                             </div>
 
                             <div class="form-actions">
@@ -339,135 +211,110 @@
                         </form>
                     </div>
 
-                    <!-- PANEL DERECHO - TRAZABILIDAD -->
                     <div class="lead-timeline">
-                    <!-- ENCABEZADO CON TÍTULO -->
-                    <div class="timeline-header">
-                        <h2><i class="fas fa-history"></i> Trazabilidad</h2>
-                        <p>Historial de actividades y contactos</p>
-                    </div>
-
-                    <!-- LISTA DE EVENTOS/ACTIVIDADES DEL LEAD -->
-                    <div class="timeline-list">
-                        <!-- EVENTO: CORREO ENVIADO
-                             Tipo: email (color rojo)
-                             Ejemplo de correo de bienvenida automático
-                        -->
-                        <div class="timeline-item email">
-                            <div class="timeline-content">
-                                <div class="timeline-time">
-                                    <i class="fas fa-envelope"></i>
-                                    Hoy, 14:30
-                                </div>
-                                <div class="timeline-title">Correo de Bienvenida Enviado</div>
-                                <div class="timeline-description">
-                                    Se envió correo de bienvenida con información del programa de Administración de Empresas.
-                                </div>
-                                <div class="timeline-meta">
-                                    <span><i class="fas fa-user"></i> Admin</span>
-                                    <span><i class="fas fa-tag"></i> Automático</span>
-                                </div>
-                            </div>
+                        <div class="timeline-header">
+                            <h2><i class="fas fa-history"></i> Trazabilidad</h2>
+                            <p>Historial de actividades y contactos</p>
                         </div>
 
-                        <!-- EVENTO: CONTACTO TELEFÓNICO
-                             Tipo: contact (color verde)
-                             Registro de llamada realizada con el lead
-                        -->
-                        <div class="timeline-item contact">
-                            <div class="timeline-content">
-                                <div class="timeline-time">
-                                    <i class="fas fa-phone"></i>
-                                    Hoy, 13:15
-                                </div>
-                                <div class="timeline-title">Llamada Telefónica</div>
-                                <div class="timeline-description">
-                                    Se realizó llamada de seguimiento. El lead mostró interés en conocer más detalles sobre el programa.
-                                </div>
-                                <div class="timeline-meta">
-                                    <span><i class="fas fa-user"></i> María Rodríguez</span>
-                                    <span><i class="fas fa-clock"></i> 15 min</span>
+                        <div class="timeline-list">
+                            <div class="timeline-item email">
+                                <div class="timeline-content">
+                                    <div class="timeline-time">
+                                        <i class="fas fa-envelope"></i>
+                                        Hoy, 14:30
+                                    </div>
+                                    <div class="timeline-title">Correo de Bienvenida Enviado</div>
+                                    <div class="timeline-description">
+                                        Se envio correo de bienvenida con informacion del programa.
+                                    </div>
+                                    <div class="timeline-meta">
+                                        <span><i class="fas fa-user"></i> Admin</span>
+                                        <span><i class="fas fa-tag"></i> Automatico</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- EVENTO: NOTA AGREGADA
-                             Tipo: note (color naranja)
-                             Observaciones o notas internas del equipo
-                        -->
-                        <div class="timeline-item note">
-                            <div class="timeline-content">
-                                <div class="timeline-time">
-                                    <i class="fas fa-sticky-note"></i>
-                                    Ayer, 16:45
-                                </div>
-                                <div class="timeline-title">Nota Agregada</div>
-                                <div class="timeline-description">
-                                    Lead muy interesado en becas disponibles. Posible convertible en 2 semanas.
-                                </div>
-                                <div class="timeline-meta">
-                                    <span><i class="fas fa-user"></i> Carlos Ruiz</span>
+                            <div class="timeline-item contact">
+                                <div class="timeline-content">
+                                    <div class="timeline-time">
+                                        <i class="fas fa-phone"></i>
+                                        Hoy, 13:15
+                                    </div>
+                                    <div class="timeline-title">Llamada Telefonica</div>
+                                    <div class="timeline-description">
+                                        Se realizo llamada de seguimiento. El lead mostro interes en conocer mas detalles.
+                                    </div>
+                                    <div class="timeline-meta">
+                                        <span><i class="fas fa-user"></i> Maria Rodriguez</span>
+                                        <span><i class="fas fa-clock"></i> 15 min</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- EVENTO: CORREO DE INFORMACIÓN
-                             Tipo: email (color rojo)
-                             Segunda comunicación con documentación del programa
-                        -->
-                        <div class="timeline-item email">
-                            <div class="timeline-content">
-                                <div class="timeline-time">
-                                    <i class="fas fa-envelope"></i>
-                                    Ayer, 10:20
-                                </div>
-                                <div class="timeline-title">Correo de Información de Programa</div>
-                                <div class="timeline-description">
-                                    Pensum, requisitos de admisión y opciones de pago enviados al correo registrado.
-                                </div>
-                                <div class="timeline-meta">
-                                    <span><i class="fas fa-user"></i> Sistema</span>
-                                    <span><i class="fas fa-tag"></i> Automático</span>
+                            <div class="timeline-item note">
+                                <div class="timeline-content">
+                                    <div class="timeline-time">
+                                        <i class="fas fa-sticky-note"></i>
+                                        Ayer, 16:45
+                                    </div>
+                                    <div class="timeline-title">Nota Agregada</div>
+                                    <div class="timeline-description">
+                                        Lead muy interesado en becas disponibles. Posible conversion en 2 semanas.
+                                    </div>
+                                    <div class="timeline-meta">
+                                        <span><i class="fas fa-user"></i> Carlos Ruiz</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- EVENTO: VISITA A CAMPUS
-                             Tipo: contact (color verde)
-                             Registro de interacción presencial del lead
-                        -->
-                        <div class="timeline-item contact">
-                            <div class="timeline-content">
-                                <div class="timeline-time">
-                                    <i class="fas fa-user-check"></i>
-                                    Hace 2 días, 09:30
-                                </div>
-                                <div class="timeline-title">Visita a Campus</div>
-                                <div class="timeline-description">
-                                    El lead asistió a la jornada de puertas abiertas. Conoció las instalaciones y habló con docentes.
-                                </div>
-                                <div class="timeline-meta">
-                                    <span><i class="fas fa-map-marker-alt"></i> Campus Principal</span>
-                                    <span><i class="fas fa-users"></i> 15 asistentes</span>
+                            <div class="timeline-item email">
+                                <div class="timeline-content">
+                                    <div class="timeline-time">
+                                        <i class="fas fa-envelope"></i>
+                                        Ayer, 10:20
+                                    </div>
+                                    <div class="timeline-title">Correo de Informacion de Programa</div>
+                                    <div class="timeline-description">
+                                        Pensum, requisitos de admision y opciones de pago enviados al correo registrado.
+                                    </div>
+                                    <div class="timeline-meta">
+                                        <span><i class="fas fa-user"></i> Sistema</span>
+                                        <span><i class="fas fa-tag"></i> Automatico</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- EVENTO: REGISTRO INICIAL
-                             Primer evento - Cuando el lead se registró en el sistema
-                        -->
-                        <div class="timeline-item">
-                            <div class="timeline-content">
-                                <div class="timeline-time">
-                                    <i class="fas fa-user-plus"></i>
-                                    Hace 5 días, 14:00
+                            <div class="timeline-item contact">
+                                <div class="timeline-content">
+                                    <div class="timeline-time">
+                                        <i class="fas fa-user-check"></i>
+                                        Hace 2 dias, 09:30
+                                    </div>
+                                    <div class="timeline-title">Visita a Campus</div>
+                                    <div class="timeline-description">
+                                        El lead asistio a la jornada de puertas abiertas y conocio las instalaciones.
+                                    </div>
+                                    <div class="timeline-meta">
+                                        <span><i class="fas fa-map-marker-alt"></i> Campus Principal</span>
+                                        <span><i class="fas fa-users"></i> 15 asistentes</span>
+                                    </div>
                                 </div>
-                                <div class="timeline-title">Lead Registrado</div>
-                                <div class="timeline-description">
-                                    María Camila se registró a través del formulario web interesada en Administración de Empresas.
-                                </div>
-                                <div class="timeline-meta">
-                                    <span><i class="fas fa-globe"></i> Sitio Web</span>
+                            </div>
+
+                            <div class="timeline-item">
+                                <div class="timeline-content">
+                                    <div class="timeline-time">
+                                        <i class="fas fa-user-plus"></i>
+                                        Hace 5 dias, 14:00
+                                    </div>
+                                    <div class="timeline-title">Lead Registrado</div>
+                                    <div class="timeline-description">
+                                        Registro inicial del lead en el sistema.
+                                    </div>
+                                    <div class="timeline-meta">
+                                        <span><i class="fas fa-globe"></i> Sitio Web</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -477,8 +324,15 @@
         </div>
     </div>
 
-    <!-- Scripts -->
-    <!-- Carga el archivo de funcionalidad global del CRM -->
+    <script>
+        window.CRM_CONFIG = {
+            strapiEnabled: false,
+            strapiBaseUrl: 'http://localhost:1337',
+            strapiApiPath: '/api',
+            strapiLeadsEndpoint: 'leads',
+            strapiToken: ''
+        };
+    </script>
     <script src="funcionalidad.js"></script>
 </body>
 </html>
