@@ -26,6 +26,7 @@ function initSidebar() {
     // Navegar entre elementos
     navItems.forEach((item) => {
         item.addEventListener('click', (e) => {
+            const targetHref = item.getAttribute('href');
             e.preventDefault();
 
             // Remover clase active de todos los items
@@ -40,6 +41,11 @@ function initSidebar() {
             }
 
             // Aquí puedes agregar lógica de navegación
+            if (targetHref && targetHref !== '#') {
+                window.location.href = targetHref;
+                return;
+            }
+
             handleNavigation(item.textContent.trim());
         });
     });
@@ -646,6 +652,10 @@ const newInitCRM = function() {
         initLeadsModule();
     }
 
+    if (document.getElementById('messagingModule')) {
+        initMessagingModule();
+    }
+
     // Agregar estilos de animación si no existen
     if (!document.getElementById('animation-styles')) {
         const style = document.createElement('style');
@@ -683,3 +693,58 @@ document.addEventListener('DOMContentLoaded', () => {
 window.CRM.initLeadsModule = initLeadsModule;
 window.CRM.updateLeadDisplay = updateLeadDisplay;
 window.CRM.disableEditMode = disableEditMode;
+window.CRM.initMessagingModule = initMessagingModule;
+
+/* ========================================
+   MODULO DE MENSAJERIA
+   Sincroniza la conversacion seleccionada con el panel principal
+   ======================================== */
+function initMessagingModule() {
+    const messagingModule = document.getElementById('messagingModule');
+    const conversationItems = document.querySelectorAll('.conversation-item');
+
+    // Si no estamos en la vista de mensajeria, salimos sin hacer nada
+    if (!messagingModule || !conversationItems.length) {
+        return;
+    }
+
+    const contactName = document.getElementById('chatContactName');
+    const contactAvatar = document.getElementById('chatContactAvatar');
+    const contactProgram = document.getElementById('chatContactProgram');
+    const channel = document.getElementById('chatChannel');
+    const lastMessage = document.getElementById('chatLastMessage');
+    const summaryStatus = document.getElementById('summaryStatus');
+    const summaryChannel = document.getElementById('summaryChannel');
+    const summaryCity = document.getElementById('summaryCity');
+    const summaryOwner = document.getElementById('summaryOwner');
+    const summaryResponse = document.getElementById('summaryResponse');
+    const summaryTag = document.getElementById('summaryTag');
+
+    const syncConversation = (item) => {
+        // Marca visualmente la conversacion activa en la bandeja
+        conversationItems.forEach((conversation) => conversation.classList.remove('active'));
+        item.classList.add('active');
+
+        // Reemplaza los textos del encabezado y del resumen con los datos del item clickeado
+        if (contactName) contactName.textContent = item.dataset.name || '';
+        if (contactAvatar) contactAvatar.textContent = item.dataset.avatar || '';
+        if (contactProgram) contactProgram.textContent = item.dataset.program || '';
+        if (channel) channel.textContent = item.dataset.channel || '';
+        if (summaryStatus) summaryStatus.textContent = item.dataset.status || '';
+        if (summaryChannel) summaryChannel.textContent = item.dataset.channel || '';
+        if (summaryCity) summaryCity.textContent = item.dataset.city || '';
+        if (summaryOwner) summaryOwner.textContent = item.dataset.owner || '';
+        if (summaryResponse) summaryResponse.textContent = item.dataset.response || '';
+        if (summaryTag) summaryTag.textContent = item.dataset.tag || '';
+
+        // Actualiza el ultimo mensaje visible para simular cambio de chat
+        if (lastMessage) {
+            lastMessage.innerHTML = `${item.dataset.lastMessage || ''}<span>${item.dataset.time || ''}</span>`;
+        }
+    };
+
+    // Vincula cada tarjeta de conversacion con la actualizacion del panel central
+    conversationItems.forEach((item) => {
+        item.addEventListener('click', () => syncConversation(item));
+    });
+}
