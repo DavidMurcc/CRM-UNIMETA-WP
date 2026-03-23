@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM UNIMETA - Seguimiento</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body data-page="pipeline">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="phone-icon">
+                <i class="fas fa-phone"></i>
+            </div>
+            <div class="logo-text">UNIMETA</div>
+            <button class="toggle-btn" id="toggleBtn" type="button">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item">
+                <i class="fas fa-th-large"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="mensajeria.html" class="nav-item">
+                <i class="fas fa-comments"></i>
+                <span>Mensajeria</span>
+            </a>
+            <a href="leads.html" class="nav-item">
+                <i class="fas fa-users"></i>
+                <span>Leads</span>
+            </a>
+            <a href="seguimiento.html" class="nav-item active">
+                <i class="fas fa-binoculars"></i>
+                <span>Seguimiento</span>
+            </a>
+            <a href="tableros.html" class="nav-item">
+                <i class="fas fa-chart-bar"></i>
+                <span>Analiticas</span>
+            </a>
+            <a href="configuracion.html" class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span>Configuracion</span>
+            </a>
+        </nav>
+    </aside>
+
+    <div class="main-content">
+        <div class="top-bar">
+            <h1 class="page-title">Seguimiento</h1>
+            <div class="top-bar-right">
+                <div class="notification-icon">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">0</span>
+                </div>
+                <div class="user-profile">
+                    <div class="profile-avatar">AC</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <section class="page-intro-card">
+                <div>
+                    <h2>Pipeline visual listo para alimentar con Strapi</h2>
+                    <p>Mueve leads por etapa, filtra por asesor y conserva la estructura para sincronizar el estado desde el backend.</p>
+                </div>
+                <div class="intro-chip-group">
+                    <span class="intro-chip" id="dataModeChip">Modo demo</span>
+                    <span class="intro-chip">Kanban CRM</span>
+                </div>
+            </section>
+
+            <div class="kpi-container">
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Activos</span>
+                        <span class="kpi-icon"><i class="fas fa-users-rays"></i></span>
+                    </div>
+                    <div class="kpi-value" id="pipelineKpiActive">0</div>
+                    <div class="kpi-change">Leads en gestion</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Vencidos</span>
+                        <span class="kpi-icon"><i class="fas fa-triangle-exclamation"></i></span>
+                    </div>
+                    <div class="kpi-value" id="pipelineKpiOverdue">0</div>
+                    <div class="kpi-change negative">Seguimientos pendientes</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Listos para cierre</span>
+                        <span class="kpi-icon"><i class="fas fa-check-to-slot"></i></span>
+                    </div>
+                    <div class="kpi-value" id="pipelineKpiReady">0</div>
+                    <div class="kpi-change">Etapa calificado</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Perdidos</span>
+                        <span class="kpi-icon"><i class="fas fa-ban"></i></span>
+                    </div>
+                    <div class="kpi-value" id="pipelineKpiLost">0</div>
+                    <div class="kpi-change">Cierre descartado</div>
+                </div>
+            </div>
+
+            <div class="toolbar-row pipeline-toolbar">
+                <div class="search-field">
+                    <i class="fas fa-search"></i>
+                    <input id="pipelineSearchInput" type="text" placeholder="Buscar por lead, programa, ciudad o asesor">
+                </div>
+                <select class="toolbar-select" id="pipelineAdvisorFilter"></select>
+            </div>
+
+            <div class="pipeline-layout">
+                <section class="pipeline-board" id="pipelineBoard"></section>
+
+                <aside class="pipeline-sidebar">
+                    <div class="summary-card">
+                        <h3>Lead seleccionado</h3>
+                        <div id="pipelineSummary"></div>
+                    </div>
+
+                    <div class="summary-card">
+                        <h3>Listo para Strapi</h3>
+                        <ul class="summary-list static-summary-list">
+                            <li><span>Campo clave</span><strong>estado</strong></li>
+                            <li><span>Relacion sugerida</span><strong>asesor</strong></li>
+                            <li><span>Trazabilidad</span><strong>activities</strong></li>
+                            <li><span>Proxima accion</span><strong>fecha_proxima_accion</strong></li>
+                        </ul>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.CRM_CONFIG = {
+            strapiEnabled: false,
+            strapiBaseUrl: 'http://localhost:1337',
+            strapiApiPath: '/api',
+            endpoints: {
+                leads: 'leads'
+            },
+            leadWritableFields: ['nombres', 'apellidos', 'programa', 'cedula', 'celular', 'correo', 'ciudad', 'estado']
+        };
+    </script>
+    <script src="funcionalidad.js"></script>
+</body>
+</html>

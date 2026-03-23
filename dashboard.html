@@ -7,15 +7,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="estilos.css">
 </head>
-<body>
-    <!-- SIDEBAR - BARRA LATERAL ROJA -->
+<body data-page="dashboard">
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="phone-icon">
                 <i class="fas fa-phone"></i>
             </div>
             <div class="logo-text">UNIMETA</div>
-            <button class="toggle-btn" id="toggleBtn">
+            <button class="toggle-btn" id="toggleBtn" type="button">
                 <i class="fas fa-times"></i>
             </button>
         </div>
@@ -39,24 +38,22 @@
             </a>
             <a href="tableros.html" class="nav-item">
                 <i class="fas fa-chart-bar"></i>
-                <span>Analíticas</span>
+                <span>Analiticas</span>
             </a>
             <a href="configuracion.html" class="nav-item">
                 <i class="fas fa-cog"></i>
-                <span>Configuración</span>
+                <span>Configuracion</span>
             </a>
         </nav>
     </aside>
 
-    <!-- MAIN CONTENT -->
     <div class="main-content">
-        <!-- TOP BAR -->
         <div class="top-bar">
-            <h1 class="page-title">Dashboard</h1>
+            <h1 class="page-title">Dashboard CRM</h1>
             <div class="top-bar-right">
                 <div class="notification-icon">
                     <i class="fas fa-bell"></i>
-                    <span class="notification-badge">3</span>
+                    <span class="notification-badge">0</span>
                 </div>
                 <div class="user-profile">
                     <div class="profile-avatar">AC</div>
@@ -64,181 +61,114 @@
             </div>
         </div>
 
-        <!-- CONTENT -->
         <div class="content">
-            <!-- KPI CARDS -->
+            <section class="page-intro-card">
+                <div>
+                    <h2>Operacion comercial preparada para Strapi</h2>
+                    <p>El dashboard consume la misma capa de datos que luego podras alimentar desde Strapi sin rehacer las vistas.</p>
+                </div>
+                <div class="intro-chip-group">
+                    <span class="intro-chip" id="dataModeChip">Modo demo</span>
+                    <span class="intro-chip">UNIMETA</span>
+                </div>
+            </section>
+
             <div class="kpi-container">
                 <div class="kpi-card">
                     <div class="kpi-header">
-                        <span class="kpi-title">Leads Totales</span>
+                        <span class="kpi-title">Leads totales</span>
                         <span class="kpi-icon"><i class="fas fa-users"></i></span>
                     </div>
-                    <div class="kpi-value" data-type="number">1,247</div>
-                    <div class="kpi-change">
-                        <i class="fas fa-arrow-up"></i>
-                        +12.5% vs mes anterior
-                    </div>
+                    <div class="kpi-value" id="dashboardTotalLeads">0</div>
+                    <div class="kpi-change">Base comercial consolidada</div>
                 </div>
 
                 <div class="kpi-card">
                     <div class="kpi-header">
-                        <span class="kpi-title">Tiempo Respuesta</span>
-                        <span class="kpi-icon"><i class="fas fa-clock"></i></span>
+                        <span class="kpi-title">Leads activos</span>
+                        <span class="kpi-icon"><i class="fas fa-user-clock"></i></span>
                     </div>
-                    <div class="kpi-value">2.4 min</div>
-                    <div class="kpi-change negative">
-                        <i class="fas fa-arrow-down"></i>
-                        -18% vs mes anterior
-                    </div>
+                    <div class="kpi-value" id="dashboardActiveLeads">0</div>
+                    <div class="kpi-change">Sin estados cerrados</div>
                 </div>
 
                 <div class="kpi-card">
                     <div class="kpi-header">
-                        <span class="kpi-title">Tasa Calificación</span>
-                        <span class="kpi-icon"><i class="fas fa-check-square"></i></span>
+                        <span class="kpi-title">Calificados</span>
+                        <span class="kpi-icon"><i class="fas fa-check-double"></i></span>
                     </div>
-                    <div class="kpi-value" data-type="percentage">68%</div>
-                    <div class="kpi-change">
-                        <i class="fas fa-arrow-up"></i>
-                        +5.2% vs mes anterior
-                    </div>
+                    <div class="kpi-value" id="dashboardQualifiedLeads">0</div>
+                    <div class="kpi-change">Listos para cierre</div>
                 </div>
 
                 <div class="kpi-card">
                     <div class="kpi-header">
-                        <span class="kpi-title">Satisfacción</span>
-                        <span class="kpi-icon"><i class="fas fa-star"></i></span>
+                        <span class="kpi-title">Conversion</span>
+                        <span class="kpi-icon"><i class="fas fa-chart-line"></i></span>
                     </div>
-                    <div class="kpi-value">4.8/5</div>
-                    <div class="kpi-change">Sin cambios</div>
+                    <div class="kpi-value" id="dashboardConversionRate">0%</div>
+                    <div class="kpi-change">Matriculados sobre total</div>
                 </div>
             </div>
 
-            <!-- CONVERSION FUNNEL CHART -->
-            <div class="chart-section">
-                <h2 class="section-title">Embudo de Conversión</h2>
-                <div class="conversion-funnel">
-                    <div class="funnel-item">
-                        <span class="funnel-label">Contacto Inicial</span>
-                        <div class="funnel-bar stage-1"></div>
-                        <span class="funnel-value">1,247</span>
+            <div class="dashboard-grid">
+                <section class="chart-section">
+                    <div class="section-header">
+                        <div>
+                            <h2 class="section-title">Embudo por estado</h2>
+                            <p class="section-subtitle">Resumen dinamico del pipeline comercial.</p>
+                        </div>
                     </div>
-                    <div class="funnel-item">
-                        <span class="funnel-label">En Calificación</span>
-                        <div class="funnel-bar stage-2"></div>
-                        <span class="funnel-value">898</span>
+                    <div id="dashboardFunnel" class="funnel-list"></div>
+                </section>
+
+                <section class="chart-section">
+                    <div class="section-header">
+                        <div>
+                            <h2 class="section-title">Alertas operativas</h2>
+                            <p class="section-subtitle">Seguimientos vencidos y conversaciones pendientes.</p>
+                        </div>
                     </div>
-                    <div class="funnel-item">
-                        <span class="funnel-label">Interesado</span>
-                        <div class="funnel-bar stage-3"></div>
-                        <span class="funnel-value">561</span>
-                    </div>
-                    <div class="funnel-item">
-                        <span class="funnel-label">Convertido</span>
-                        <div class="funnel-bar stage-4"></div>
-                        <span class="funnel-value">274</span>
-                    </div>
-                </div>
+                    <div id="dashboardAlerts" class="alert-list"></div>
+                </section>
             </div>
 
-            <!-- RECENT CONVERSATIONS TABLE -->
-            <div class="table-section">
-                <h2 class="section-title">Conversaciones Recientes</h2>
+            <section class="table-section">
+                <div class="section-header">
+                    <div>
+                        <h2 class="section-title">Actividad comercial reciente</h2>
+                        <p class="section-subtitle">Cada fila abre la hoja de vida del lead.</p>
+                    </div>
+                </div>
                 <div class="table-responsive">
                     <table>
                         <thead>
                             <tr>
-                                <th>Contacto</th>
+                                <th>Lead</th>
                                 <th>Programa</th>
-                                <th>Ciudad</th>
+                                <th>Asesor</th>
                                 <th>Estado</th>
-                                <th>Última Actividad</th>
+                                <th>Proxima accion</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <div class="contact-cell">
-                                        <div class="contact-avatar">MC</div>
-                                        <div class="contact-info">
-                                            <h4>Maria Camila Rodriguez</h4>
-                                            <p>+57 310 456 7890</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>Administración de Empresas</td>
-                                <td>Villavicencio</td>
-                                <td><span class="status-badge status-interesado">Interesado</span></td>
-                                <td>Hace 5 min</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="contact-cell">
-                                        <div class="contact-avatar">JA</div>
-                                        <div class="contact-info">
-                                            <h4>Juan Andrés Martínez</h4>
-                                            <p>+57 311 234 5678</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>Ingeniería de Sistemas</td>
-                                <td>Acacías</td>
-                                <td><span class="status-badge status-nuevo">Nuevo</span></td>
-                                <td>Hace 12 min</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="contact-cell">
-                                        <div class="contact-avatar">LG</div>
-                                        <div class="contact-info">
-                                            <h4>Laura González Pérez</h4>
-                                            <p>+57 312 567 8901</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>Contabilidad</td>
-                                <td>Puerto López</td>
-                                <td><span class="status-badge status-calificado">Calificado</span></td>
-                                <td>Hace 25 min</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="contact-cell">
-                                        <div class="contact-avatar">CF</div>
-                                        <div class="contact-info">
-                                            <h4>Carlos Fernández Ruiz</h4>
-                                            <p>+57 313 678 9012</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>Derecho</td>
-                                <td>Bogotá</td>
-                                <td><span class="status-badge status-interesado">Interesado</span></td>
-                                <td>Hace 1 hora</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="contact-cell">
-                                        <div class="contact-avatar">SL</div>
-                                        <div class="contact-info">
-                                            <h4>Sandra López Moreno</h4>
-                                            <p>+57 314 789 0123</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>Psicología</td>
-                                <td>Villavicencio</td>
-                                <td><span class="status-badge status-nuevo">Nuevo</span></td>
-                                <td>Hace 2 horas</td>
-                            </tr>
-                        </tbody>
+                        <tbody id="dashboardRecentTableBody"></tbody>
                     </table>
                 </div>
-            </div>
+            </section>
         </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="script.js"></script>
+    <script>
+        window.CRM_CONFIG = {
+            strapiEnabled: false,
+            strapiBaseUrl: 'http://localhost:1337',
+            strapiApiPath: '/api',
+            endpoints: {
+                leads: 'leads'
+            },
+            leadWritableFields: ['nombres', 'apellidos', 'programa', 'cedula', 'celular', 'correo', 'ciudad', 'estado']
+        };
+    </script>
+    <script src="funcionalidad.js"></script>
 </body>
 </html>

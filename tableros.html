@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM UNIMETA - Analiticas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body data-page="analytics">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="phone-icon">
+                <i class="fas fa-phone"></i>
+            </div>
+            <div class="logo-text">UNIMETA</div>
+            <button class="toggle-btn" id="toggleBtn" type="button">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item">
+                <i class="fas fa-th-large"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="mensajeria.html" class="nav-item">
+                <i class="fas fa-comments"></i>
+                <span>Mensajeria</span>
+            </a>
+            <a href="leads.html" class="nav-item">
+                <i class="fas fa-users"></i>
+                <span>Leads</span>
+            </a>
+            <a href="seguimiento.html" class="nav-item">
+                <i class="fas fa-binoculars"></i>
+                <span>Seguimiento</span>
+            </a>
+            <a href="tableros.html" class="nav-item active">
+                <i class="fas fa-chart-bar"></i>
+                <span>Analiticas</span>
+            </a>
+            <a href="configuracion.html" class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span>Configuracion</span>
+            </a>
+        </nav>
+    </aside>
+
+    <div class="main-content">
+        <div class="top-bar">
+            <h1 class="page-title">Analiticas</h1>
+            <div class="top-bar-right">
+                <div class="notification-icon">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">0</span>
+                </div>
+                <div class="user-profile">
+                    <div class="profile-avatar">AC</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <section class="page-intro-card">
+                <div>
+                    <h2>Tableros operativos listos para tomar datos desde Strapi</h2>
+                    <p>Los indicadores se calculan desde la capa de datos comun, por eso despues solo cambias el origen y no el tablero.</p>
+                </div>
+                <div class="intro-chip-group">
+                    <span class="intro-chip" id="dataModeChip">Modo demo</span>
+                    <span class="intro-chip">BI academico</span>
+                </div>
+            </section>
+
+            <div class="kpi-container">
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Leads</span>
+                        <span class="kpi-icon"><i class="fas fa-users"></i></span>
+                    </div>
+                    <div class="kpi-value" id="analyticsTotalLeads">0</div>
+                    <div class="kpi-change">Base analizada</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Conversion</span>
+                        <span class="kpi-icon"><i class="fas fa-percent"></i></span>
+                    </div>
+                    <div class="kpi-value" id="analyticsConversionRate">0%</div>
+                    <div class="kpi-change">Matriculados sobre total</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Seguimientos vencidos</span>
+                        <span class="kpi-icon"><i class="fas fa-calendar-xmark"></i></span>
+                    </div>
+                    <div class="kpi-value" id="analyticsPendingTasks">0</div>
+                    <div class="kpi-change negative">Alertas operativas</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Chats pendientes</span>
+                        <span class="kpi-icon"><i class="fas fa-comment-slash"></i></span>
+                    </div>
+                    <div class="kpi-value" id="analyticsPendingChats">0</div>
+                    <div class="kpi-change">Bandeja comercial</div>
+                </div>
+            </div>
+
+            <div class="analytics-grid">
+                <section class="chart-section">
+                    <div class="section-header">
+                        <div>
+                            <h2 class="section-title">Embudo comercial</h2>
+                            <p class="section-subtitle">Distribucion por estado del lead.</p>
+                        </div>
+                    </div>
+                    <div id="analyticsFunnel" class="bar-list"></div>
+                </section>
+
+                <section class="chart-section">
+                    <div class="section-header">
+                        <div>
+                            <h2 class="section-title">Leads por programa</h2>
+                            <p class="section-subtitle">Prioriza programas con mayor volumen.</p>
+                        </div>
+                    </div>
+                    <div id="analyticsPrograms" class="bar-list"></div>
+                </section>
+
+                <section class="chart-section">
+                    <div class="section-header">
+                        <div>
+                            <h2 class="section-title">Leads por fuente</h2>
+                            <p class="section-subtitle">Mide rendimiento de canales de captacion.</p>
+                        </div>
+                    </div>
+                    <div id="analyticsSources" class="bar-list"></div>
+                </section>
+
+                <section class="chart-section">
+                    <div class="section-header">
+                        <div>
+                            <h2 class="section-title">Carga por asesor</h2>
+                            <p class="section-subtitle">Ayuda a distribuir la operacion del equipo.</p>
+                        </div>
+                    </div>
+                    <div id="analyticsAdvisors" class="bar-list"></div>
+                </section>
+            </div>
+
+            <section class="table-section">
+                <div class="section-header">
+                    <div>
+                        <h2 class="section-title">Indicadores de servicio</h2>
+                        <p class="section-subtitle">KPIs base recomendados para el trabajo de grado.</p>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Indicador</th>
+                                <th>Valor</th>
+                                <th>Meta sugerida</th>
+                            </tr>
+                        </thead>
+                        <tbody id="analyticsServiceBody"></tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        window.CRM_CONFIG = {
+            strapiEnabled: false,
+            strapiBaseUrl: 'http://localhost:1337',
+            strapiApiPath: '/api',
+            endpoints: {
+                leads: 'leads'
+            },
+            leadWritableFields: ['nombres', 'apellidos', 'programa', 'cedula', 'celular', 'correo', 'ciudad', 'estado']
+        };
+    </script>
+    <script src="funcionalidad.js"></script>
+</body>
+</html>

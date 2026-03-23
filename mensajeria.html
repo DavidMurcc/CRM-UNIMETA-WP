@@ -7,15 +7,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="estilos.css">
 </head>
-<body>
-    <!-- Sidebar principal reutilizado en todo el CRM -->
+<body data-page="messaging">
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="phone-icon">
                 <i class="fas fa-phone"></i>
             </div>
             <div class="logo-text">UNIMETA</div>
-            <button class="toggle-btn" id="toggleBtn">
+            <button class="toggle-btn" id="toggleBtn" type="button">
                 <i class="fas fa-times"></i>
             </button>
         </div>
@@ -49,13 +48,12 @@
     </aside>
 
     <div class="main-content">
-        <!-- Barra superior con titulo, notificaciones y perfil -->
         <div class="top-bar">
             <h1 class="page-title">Mensajeria</h1>
             <div class="top-bar-right">
                 <div class="notification-icon">
                     <i class="fas fa-bell"></i>
-                    <span class="notification-badge">4</span>
+                    <span class="notification-badge">0</span>
                 </div>
                 <div class="user-profile">
                     <div class="profile-avatar">AC</div>
@@ -64,18 +62,25 @@
         </div>
 
         <div class="content">
-            <!-- KPIs rapidos para ver el estado operativo de mensajeria -->
+            <section class="page-intro-card">
+                <div>
+                    <h2>Bandeja unificada lista para enlazar con Strapi</h2>
+                    <p>La mensajeria ya queda conectada al lead y a la trazabilidad, aunque hoy funcione con datos locales.</p>
+                </div>
+                <div class="intro-chip-group">
+                    <span class="intro-chip" id="dataModeChip">Modo demo</span>
+                    <span class="intro-chip">WhatsApp first</span>
+                </div>
+            </section>
+
             <div class="kpi-container">
                 <div class="kpi-card">
                     <div class="kpi-header">
                         <span class="kpi-title">Conversaciones activas</span>
                         <span class="kpi-icon"><i class="fas fa-comments"></i></span>
                     </div>
-                    <div class="kpi-value" data-type="number">148</div>
-                    <div class="kpi-change">
-                        <i class="fas fa-arrow-up"></i>
-                        +8% vs semana anterior
-                    </div>
+                    <div class="kpi-value" id="messagingActiveCount">0</div>
+                    <div class="kpi-change">Bandeja consolidada</div>
                 </div>
 
                 <div class="kpi-card">
@@ -83,11 +88,8 @@
                         <span class="kpi-title">Sin respuesta</span>
                         <span class="kpi-icon"><i class="fas fa-clock"></i></span>
                     </div>
-                    <div class="kpi-value" data-type="number">19</div>
-                    <div class="kpi-change negative">
-                        <i class="fas fa-arrow-down"></i>
-                        -4 casos pendientes
-                    </div>
+                    <div class="kpi-value" id="messagingPendingCount">0</div>
+                    <div class="kpi-change negative">Pendientes de atencion</div>
                 </div>
 
                 <div class="kpi-card">
@@ -95,170 +97,51 @@
                         <span class="kpi-title">Tiempo promedio</span>
                         <span class="kpi-icon"><i class="fas fa-stopwatch"></i></span>
                     </div>
-                    <div class="kpi-value">3.2 min</div>
-                    <div class="kpi-change">
-                        <i class="fas fa-arrow-up"></i>
-                        Mejor respuesta del equipo
-                    </div>
+                    <div class="kpi-value" id="messagingResponseCount">0</div>
+                    <div class="kpi-change">Medicion operativa</div>
                 </div>
 
                 <div class="kpi-card">
                     <div class="kpi-header">
-                        <span class="kpi-title">Conversion chat</span>
+                        <span class="kpi-title">Conversion estimada</span>
                         <span class="kpi-icon"><i class="fas fa-user-check"></i></span>
                     </div>
-                    <div class="kpi-value" data-type="percentage">64%</div>
-                    <div class="kpi-change">
-                        <i class="fas fa-arrow-up"></i>
-                        +6.1% este mes
-                    </div>
+                    <div class="kpi-value" id="messagingConversionCount">0%</div>
+                    <div class="kpi-change">Calificados y matriculados</div>
                 </div>
             </div>
 
-            <!-- Layout del modulo: bandeja, chat activo y resumen del lead -->
             <div class="messaging-layout" id="messagingModule">
                 <section class="messaging-sidebar-panel">
-                    <!-- Encabezado y filtros de la bandeja de conversaciones -->
                     <div class="messaging-panel-header">
                         <div>
-                            <h2><i class="fab fa-whatsapp"></i> Bandeja de WhatsApp</h2>
-                            <p>Gestiona unicamente conversaciones entrantes desde WhatsApp.</p>
+                            <h2><i class="fab fa-whatsapp"></i> Bandeja de conversaciones</h2>
+                            <p>Busca por lead, programa, ciudad o tema para trabajar la operacion comercial.</p>
                         </div>
-                        <button class="messaging-filter-btn" type="button">
-                            <i class="fas fa-sliders-h"></i>
-                            Filtros
-                        </button>
                     </div>
 
-                    <!-- Buscador visual para futuras integraciones de filtro -->
                     <div class="messaging-search">
                         <i class="fas fa-search"></i>
-                        <input type="text" placeholder="Buscar por nombre, programa o ciudad">
+                        <input id="messagingSearchInput" type="text" placeholder="Buscar por nombre, programa, ciudad o etiqueta">
                     </div>
 
-                    <!-- Pestañas de estado para organizar la bandeja -->
                     <div class="messaging-tabs">
-                        <button class="messaging-tab active" type="button">Todos</button>
-                        <button class="messaging-tab" type="button">Nuevos</button>
-                        <button class="messaging-tab" type="button">Seguimiento</button>
+                        <button class="messaging-tab active" data-filter="todos" type="button">Todos</button>
+                        <button class="messaging-tab" data-filter="nuevos" type="button">Nuevos</button>
+                        <button class="messaging-tab" data-filter="seguimiento" type="button">Seguimiento</button>
+                        <button class="messaging-tab" data-filter="sin-respuesta" type="button">Sin respuesta</button>
                     </div>
 
-                    <!-- Cada item guarda datos en data-* para pintar el chat al hacer click -->
-                    <div class="conversation-list">
-                        <article class="conversation-item active"
-                            data-name="Maria Camila Rodriguez"
-                            data-avatar="MC"
-                            data-program="Administracion de Empresas"
-                            data-status="Interesada"
-                            data-channel="WhatsApp"
-                            data-response="2 min"
-                            data-owner="Andrea Cardenas"
-                            data-city="Villavicencio"
-                            data-last-message="Quisiera saber si aun puedo aplicar a beca para el proximo semestre."
-                            data-tag="Beca"
-                            data-time="Hace 2 min">
-                            <div class="conversation-avatar">MC</div>
-                            <div class="conversation-body">
-                                <div class="conversation-topline">
-                                    <h3>Maria Camila Rodriguez</h3>
-                                    <span>2 min</span>
-                                </div>
-                                <p>Consulta sobre becas y proceso de admision.</p>
-                                <div class="conversation-meta">
-                                    <span class="status-badge status-interesado">Prioritario</span>
-                                    <span>WhatsApp</span>
-                                </div>
-                            </div>
-                        </article>
-
-                        <article class="conversation-item"
-                            data-name="Juan Andres Martinez"
-                            data-avatar="JA"
-                            data-program="Ingenieria de Sistemas"
-                            data-status="Nuevo"
-                            data-channel="WhatsApp"
-                            data-response="8 min"
-                            data-owner="Sofia Perez"
-                            data-city="Acacias"
-                            data-last-message="Me compartes informacion del plan de estudios y horario nocturno?"
-                            data-tag="Pensum"
-                            data-time="Hace 8 min">
-                            <div class="conversation-avatar">JA</div>
-                            <div class="conversation-body">
-                                <div class="conversation-topline">
-                                    <h3>Juan Andres Martinez</h3>
-                                    <span>8 min</span>
-                                </div>
-                                <p>Solicita pensum y opciones de jornada.</p>
-                                <div class="conversation-meta">
-                                    <span class="status-badge status-nuevo">Nuevo</span>
-                                    <span>WhatsApp</span>
-                                </div>
-                            </div>
-                        </article>
-
-                        <article class="conversation-item"
-                            data-name="Laura Gonzalez Perez"
-                            data-avatar="LG"
-                            data-program="Contabilidad"
-                            data-status="Calificada"
-                            data-channel="WhatsApp"
-                            data-response="12 min"
-                            data-owner="Carlos Ruiz"
-                            data-city="Puerto Lopez"
-                            data-last-message="Ya complete el formulario. Quedo atenta al siguiente paso."
-                            data-tag="Formulario"
-                            data-time="Hace 12 min">
-                            <div class="conversation-avatar">LG</div>
-                            <div class="conversation-body">
-                                <div class="conversation-topline">
-                                    <h3>Laura Gonzalez Perez</h3>
-                                    <span>12 min</span>
-                                </div>
-                                <p>Formulario completado y a la espera de seguimiento.</p>
-                                <div class="conversation-meta">
-                                    <span class="status-badge status-calificado">Calificada</span>
-                                    <span>WhatsApp</span>
-                                </div>
-                            </div>
-                        </article>
-
-                        <article class="conversation-item"
-                            data-name="Carlos Fernandez Ruiz"
-                            data-avatar="CF"
-                            data-program="Derecho"
-                            data-status="Seguimiento"
-                            data-channel="WhatsApp"
-                            data-response="25 min"
-                            data-owner="Andrea Cardenas"
-                            data-city="Bogota"
-                            data-last-message="Perfecto, puedo asistir a la charla virtual del viernes."
-                            data-tag="Evento"
-                            data-time="Hace 25 min">
-                            <div class="conversation-avatar">CF</div>
-                            <div class="conversation-body">
-                                <div class="conversation-topline">
-                                    <h3>Carlos Fernandez Ruiz</h3>
-                                    <span>25 min</span>
-                                </div>
-                                <p>Confirmo asistencia a charla virtual del programa.</p>
-                                <div class="conversation-meta">
-                                    <span class="status-badge status-interesado">Seguimiento</span>
-                                    <span>WhatsApp</span>
-                                </div>
-                            </div>
-                        </article>
-                    </div>
+                    <div class="conversation-list" id="conversationList"></div>
                 </section>
 
                 <section class="chat-panel">
-                    <!-- Este bloque cambia segun la conversacion seleccionada -->
                     <div class="chat-header">
                         <div class="chat-contact">
-                            <div class="chat-contact-avatar" id="chatContactAvatar">MC</div>
+                            <div class="chat-contact-avatar" id="chatContactAvatar">--</div>
                             <div>
-                                <h2 id="chatContactName">Maria Camila Rodriguez</h2>
-                                <p id="chatContactProgram">Administracion de Empresas</p>
+                                <h2 id="chatContactName">Sin conversacion</h2>
+                                <p id="chatContactProgram">Selecciona una conversacion</p>
                             </div>
                         </div>
                         <div class="chat-header-actions">
@@ -268,33 +151,12 @@
                         </div>
                     </div>
 
-                    <!-- Conversacion activa mostrada en el panel central -->
-                    <div class="chat-messages">
-                        <div class="message-row incoming">
-                            <div class="message-bubble">
-                                Hola, estoy interesada en conocer las becas disponibles para Administracion de Empresas.
-                                <span>10:14</span>
-                            </div>
-                        </div>
-                        <div class="message-row outgoing">
-                            <div class="message-bubble">
-                                Claro, Maria Camila. Tenemos becas por rendimiento academico y convenios regionales. Te comparto el detalle.
-                                <span>10:16</span>
-                            </div>
-                        </div>
-                        <div class="message-row incoming">
-                            <div class="message-bubble" id="chatLastMessage">
-                                Quisiera saber si aun puedo aplicar a beca para el proximo semestre.
-                                <span id="chatLastMessageTime">Hace 2 min</span>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="chat-messages" id="chatMessages"></div>
 
-                    <!-- Composer visual para mantener la estructura de mensajeria -->
                     <div class="chat-composer">
                         <button class="messaging-icon-btn" type="button"><i class="fas fa-paperclip"></i></button>
-                        <input type="text" value="Hola, te comparto los requisitos y fechas para aplicar a la beca institucional.">
-                        <button class="chat-send-btn" type="button">
+                        <input id="chatComposerInput" type="text" placeholder="Escribe una respuesta para dejarla registrada en el historial">
+                        <button class="chat-send-btn" id="chatSendBtn" type="button">
                             <i class="fas fa-paper-plane"></i>
                             Enviar
                         </button>
@@ -302,29 +164,28 @@
                 </section>
 
                 <aside class="conversation-summary">
-                    <!-- Resumen lateral del lead asociado a la conversacion -->
                     <div class="summary-card">
                         <h3>Resumen del lead</h3>
                         <ul class="summary-list">
                             <li>
                                 <span>Estado</span>
-                                <strong id="summaryStatus">Interesada</strong>
+                                <strong id="summaryStatus">Sin dato</strong>
                             </li>
                             <li>
                                 <span>Canal</span>
-                                <strong id="summaryChannel">WhatsApp</strong>
+                                <strong id="summaryChannel">Sin dato</strong>
                             </li>
                             <li>
                                 <span>Ciudad</span>
-                                <strong id="summaryCity">Villavicencio</strong>
+                                <strong id="summaryCity">Sin dato</strong>
                             </li>
                             <li>
                                 <span>Asesor</span>
-                                <strong id="summaryOwner">Andrea Cardenas</strong>
+                                <strong id="summaryOwner">Sin dato</strong>
                             </li>
                             <li>
                                 <span>Tiempo de respuesta</span>
-                                <strong id="summaryResponse">2 min</strong>
+                                <strong id="summaryResponse">Sin dato</strong>
                             </li>
                         </ul>
                     </div>
@@ -332,42 +193,31 @@
                     <div class="summary-card">
                         <h3>Proxima accion</h3>
                         <div class="next-action-card">
-                            <span class="next-action-tag" id="summaryTag">Beca</span>
-                            <p>Enviar brochure de apoyo financiero y agendar llamada de cierre para esta semana.</p>
+                            <span class="next-action-tag" id="summaryTag">Sin etiqueta</span>
+                            <p id="summaryNextAction">Sin proxima accion registrada.</p>
                         </div>
                     </div>
 
                     <div class="summary-card">
                         <h3>Actividad reciente</h3>
-                        <div class="activity-list">
-                            <div class="activity-item">
-                                <i class="fas fa-envelope"></i>
-                                <div>
-                                    <strong>Correo enviado</strong>
-                                    <p>Brochure institucional compartido hace 1 hora.</p>
-                                </div>
-                            </div>
-                            <div class="activity-item">
-                                <i class="fas fa-phone"></i>
-                                <div>
-                                    <strong>Llamada programada</strong>
-                                    <p>Seguimiento asignado para manana a las 9:00 a.m.</p>
-                                </div>
-                            </div>
-                            <div class="activity-item">
-                                <i class="fas fa-sticky-note"></i>
-                                <div>
-                                    <strong>Nota interna</strong>
-                                    <p>Lead con alta intencion de inscripcion.</p>
-                                </div>
-                            </div>
-                        </div>
+                        <div class="activity-list" id="conversationActivityList"></div>
                     </div>
                 </aside>
             </div>
         </div>
     </div>
 
+    <script>
+        window.CRM_CONFIG = {
+            strapiEnabled: false,
+            strapiBaseUrl: 'http://localhost:1337',
+            strapiApiPath: '/api',
+            endpoints: {
+                leads: 'leads'
+            },
+            leadWritableFields: ['nombres', 'apellidos', 'programa', 'cedula', 'celular', 'correo', 'ciudad', 'estado']
+        };
+    </script>
     <script src="funcionalidad.js"></script>
 </body>
 </html>

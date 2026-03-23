@@ -2,6 +2,8 @@
 
 Plataforma web de gestion comercial y seguimiento de aspirantes para la Corporacion Universitaria del Meta.
 
+Ultima actualizacion documentada: `23/03/2026`
+
 ## Portada
 
 ```text
@@ -17,6 +19,7 @@ Plataforma web de gestion comercial y seguimiento de aspirantes para la Corporac
 ## Tabla de contenido
 
 - [Vision general](#vision-general)
+- [Actualizacion 23/03/2026](#actualizacion-23032026)
 - [Problema que resuelve](#problema-que-resuelve)
 - [Objetivos del producto](#objetivos-del-producto)
 - [Arquitectura funcional](#arquitectura-funcional)
@@ -34,6 +37,52 @@ Plataforma web de gestion comercial y seguimiento de aspirantes para la Corporac
 - [Roadmap](#roadmap)
 - [Buenas practicas](#buenas-practicas)
 - [FAQ rapido](#faq-rapido)
+
+## Actualizacion 23/03/2026
+
+En fecha `23/03/2026` se realizo una actualizacion importante del frontend para dejarlo funcional como prototipo de CRM y, al mismo tiempo, preparado para alimentarse despues desde Strapi sin rehacer la interfaz.
+
+### Lo mas importante que se hizo
+
+- se reemplazo la logica dispersa por una capa comun de datos en `funcionalidad.js`
+- se definio un contrato base de datos para el lead con campos visibles y campos preparados para futura integracion
+- se activo un modo demo con persistencia local para que el sistema pueda mostrarse y probarse sin backend disponible
+- se dejo configurada la estructura para consumir Strapi mediante `window.CRM_CONFIG`, endpoints y mapeo de campos editables
+- se reconstruyo `dashboard.html` para mostrar KPIs, embudo y alertas operativas con datos dinamicos
+- se amplio `leads.html` para manejar una hoja de vida 360 del aspirante con datos comerciales, seguimiento y trazabilidad
+- se reorganizo `mensajeria.html` para conectar conversaciones con el lead asociado y registrar actividad operativa
+- se construyo `seguimiento.html` como pipeline tipo Kanban para mover leads por estado
+- se construyo `tableros.html` para analiticas comerciales y operativas
+- se construyo `configuracion.html` como vista documental y funcional para catalogos y contrato de datos
+- se corrigio la navegacion principal para que todas las pantallas del CRM queden conectadas entre si
+
+### Resultado funcional del frontend
+
+El sistema ya no queda solamente como maqueta visual. A partir de esta fecha el frontend puede:
+
+- listar, crear y editar leads en modo local
+- mostrar trazabilidad por lead
+- mostrar conversaciones asociadas a un lead
+- mover leads entre etapas comerciales
+- calcular indicadores y analiticas desde una misma base de datos local
+- documentar los campos y colecciones que luego deben existir en Strapi
+
+### Que se dejo preparado para Strapi
+
+La actualizacion no activa aun el backend real, pero si deja resuelto el lado del frontend para integracion posterior:
+
+- configuracion centralizada de `baseUrl`, `apiPath` y `endpoints`
+- normalizacion de datos para aceptar estructuras locales o respuestas de Strapi
+- separacion entre capa visual y capa de datos
+- lista de `leadWritableFields` para controlar que campos se envian al backend
+- fallback local cuando Strapi no esta disponible
+
+### Lo que sigue despues de esta fecha
+
+- conectar el collection type real de `Lead` en Strapi con todos los campos comerciales adicionales
+- crear colecciones complementarias para conversaciones, actividades, asesores, programas y plantillas
+- enlazar eventos reales desde n8n o desde los canales de captacion
+- reemplazar gradualmente los datos demo por datos reales
 
 ## Vision general
 
@@ -155,30 +204,34 @@ No se usa:
 
 ## Estado actual
 
-El proyecto esta en una fase de frontend funcional con preparacion para backend.
+El proyecto esta en una fase de frontend funcional, navegable y preparado para backend.
 
 ### Lo que ya existe
 
 - layout base con sidebar y topbar
 - design system compartido en `estilos.css`
-- logica comun en `funcionalidad.js`
-- dashboard visual con KPIs de ejemplo
-- modulo de mensajeria con estructura visual
+- logica comun y capa de datos compartida en `funcionalidad.js`
+- modo demo con persistencia local
+- dashboard funcional con KPIs, embudo y alertas
+- modulo de mensajeria conectado al lead y a la actividad comercial
 - modulo de leads con flujo local de listar, abrir, editar y crear
-- preparacion para Strapi, pero con conexion desactivada
+- vista de seguimiento con pipeline comercial
+- vista de analiticas con tableros operativos
+- vista de configuracion enfocada en contrato de datos y preparacion para Strapi
+- preparacion para Strapi con conexion aun desactivada por la etapa actual
 
 ### Lo que aun esta pendiente
 
 - conexion real a Strapi
 - integraciones con n8n
-- pipeline en `seguimiento.html`
-- reportes en `tableros.html`
-- configuraciones en `configuracion.html`
-- trazabilidad real de conversaciones y eventos
+- autenticacion y control de usuarios
+- endpoints reales para conversaciones, actividades, programas y asesores
+- trazabilidad real de conversaciones y eventos externos
+- sincronizacion con fuentes institucionales
 
 ### Estado del modulo de leads
 
-Hoy el modulo de leads trabaja con mock data. Ya esta organizado para que despues se pueda activar el backend sin rehacer toda la interfaz.
+Hoy el modulo de leads trabaja con datos demo y persistencia local. Ya esta organizado para que despues se pueda activar Strapi sin rehacer toda la interfaz.
 
 ## Instalacion y uso
 
@@ -270,8 +323,8 @@ Proposito:
 
 Estado:
 
-- estructura visual avanzada
-- datos aun de ejemplo
+- estructura funcional conectada a la capa comun de datos
+- KPIs, embudo y alertas con datos demo
 
 Vista esperada:
 
@@ -295,15 +348,16 @@ Estado:
 
 - modulo mas avanzado del proyecto
 - preparado para conexion futura a Strapi
-- actualmente usa mocks
+- actualmente usa datos demo y almacenamiento local
 
 Vista esperada:
 
 ```text
 Listado de leads
  -> click en lead
-Detalle del lead
+Detalle 360 del lead
  -> editar / guardar / cancelar
+ -> ver trazabilidad
 Modal para crear lead
 ```
 
@@ -317,8 +371,8 @@ Proposito:
 
 Estado:
 
-- estructura visual y layout base
-- aun sin datos reales
+- estructura funcional conectada a conversaciones demo
+- aun sin datos reales de canal externo
 
 Vista esperada:
 
@@ -337,7 +391,7 @@ Proposito:
 
 Estado:
 
-- pendiente de construccion
+- construido como pipeline comercial visual
 
 Vista sugerida:
 
@@ -355,7 +409,7 @@ Proposito:
 
 Estado:
 
-- pendiente de construccion
+- construido como tablero de analiticas operativas
 
 Vista sugerida:
 
@@ -375,7 +429,7 @@ Proposito:
 
 Estado:
 
-- pendiente de construccion
+- construido como vista de configuracion y contrato de datos
 
 Vista sugerida:
 
@@ -407,8 +461,12 @@ Modelo de referencia:
   asesor_asignado: "string",
   fecha_creacion: "ISO string",
   fecha_ultimo_contacto: "ISO string",
+  fecha_proxima_accion: "ISO string",
+  tipo_proxima_accion: "llamada|whatsapp|correo|visita|seguimiento",
+  prioridad: "alta|media|baja",
   notas: "string",
-  conversaciones: []
+  conversaciones: [],
+  actividades: []
 }
 ```
 
@@ -420,7 +478,11 @@ Modelo de referencia:
 | `fuente` | ayuda a medir origen del lead |
 | `asesor_asignado` | permite trazabilidad operativa |
 | `fecha_ultimo_contacto` | apoya prioridades de seguimiento |
+| `fecha_proxima_accion` | permite detectar seguimientos vencidos |
+| `tipo_proxima_accion` | define la siguiente tarea comercial |
+| `prioridad` | ayuda a priorizar cierres y atencion |
 | `conversaciones` | conecta el CRM con mensajeria |
+| `actividades` | soporta la trazabilidad del proceso |
 
 ## Design system
 
@@ -480,10 +542,12 @@ La idea es activarlo como backend oficial.
 Pasos esperados:
 
 1. definir el collection type de `Lead`
-2. mapear campos del CRM
-3. configurar endpoints
-4. activar wrapper de API
-5. reemplazar mocks por datos reales
+2. ampliar el modelo con campos comerciales adicionales
+3. crear colecciones relacionadas para conversaciones, actividades y catalogos
+4. mapear campos del CRM
+5. configurar endpoints
+6. activar wrapper de API
+7. reemplazar datos demo por datos reales
 
 ### n8n
 
@@ -502,9 +566,9 @@ Casos esperados:
 | Fase | Objetivo | Estado |
 |---|---|---|
 | Fase 1 | Definir identidad visual y layout base | Completado |
-| Fase 2 | Construir dashboard y mensajeria inicial | En progreso |
-| Fase 3 | Consolidar CRUD de leads con mocks | En progreso |
-| Fase 4 | Completar seguimiento, tableros y configuracion | Pendiente |
+| Fase 2 | Construir dashboard y mensajeria inicial | Completado |
+| Fase 3 | Consolidar CRUD de leads con datos demo | Completado |
+| Fase 4 | Completar seguimiento, tableros y configuracion | Completado |
 | Fase 5 | Conectar Strapi | Pendiente |
 | Fase 6 | Integrar n8n y canales externos | Pendiente |
 | Fase 7 | Trazabilidad real de WhatsApp y automatizaciones | Pendiente |
@@ -530,7 +594,7 @@ Casos esperados:
 
 ### Este proyecto ya usa backend real
 
-No. Hoy esta preparado para backend, pero todavia funciona principalmente con datos mock en el modulo de leads.
+No. A fecha `23/03/2026` el frontend funciona en modo demo con persistencia local, pero ya esta preparado para conectarse a Strapi.
 
 ### Se necesita Node o npm
 
@@ -542,7 +606,7 @@ Porque el proyecto fue definido para ser liviano, facil de mantener y compatible
 
 ### Cuando entran Strapi y n8n
 
-En la siguiente etapa de integracion. Primero se esta consolidando el frontend y el flujo funcional.
+En la siguiente etapa de integracion. A fecha `23/03/2026` ya se consolido el frontend y el siguiente paso es conectar el backend real.
 
 ## Cierre
 
