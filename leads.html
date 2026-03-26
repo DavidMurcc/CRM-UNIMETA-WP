@@ -1,348 +1,405 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CRM UNIMETA - Leads</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="estilos.css">
-</head>
-<body data-page="leads">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="estilos.css" />
+  </head>
+  <body data-page="leads">
     <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <div class="phone-icon">
-                <i class="fas fa-phone"></i>
-            </div>
-            <div class="logo-text">UNIMETA</div>
-            <button class="toggle-btn" id="toggleBtn" type="button">
-                <i class="fas fa-times"></i>
-            </button>
+      <div class="sidebar-header">
+        <div class="phone-icon">
+          <i class="fas fa-phone"></i>
         </div>
+        <div class="logo-text">UNIMETA</div>
+        <button class="toggle-btn" id="toggleBtn" type="button">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
 
-        <nav class="sidebar-nav">
-            <a href="dashboard.html" class="nav-item">
-                <i class="fas fa-th-large"></i>
-                <span>Dashboard</span>
-            </a>
-            <a href="mensajeria.html" class="nav-item">
-                <i class="fas fa-comments"></i>
-                <span>Mensajeria</span>
-            </a>
-            <a href="leads.html" class="nav-item active">
-                <i class="fas fa-users"></i>
-                <span>Leads</span>
-            </a>
-            <a href="seguimiento.html" class="nav-item">
-                <i class="fas fa-binoculars"></i>
-                <span>Seguimiento</span>
-            </a>
-            <a href="tableros.html" class="nav-item">
-                <i class="fas fa-chart-bar"></i>
-                <span>Analiticas</span>
-            </a>
-            <a href="configuracion.html" class="nav-item">
-                <i class="fas fa-cog"></i>
-                <span>Configuracion</span>
-            </a>
-        </nav>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item">
+          <i class="fas fa-th-large"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="mensajeria.html" class="nav-item">
+          <i class="fas fa-comments"></i>
+          <span>Mensajeria</span>
+        </a>
+        <a href="leads.html" class="nav-item active">
+          <i class="fas fa-users"></i>
+          <span>Leads</span>
+        </a>
+        <a href="seguimiento.html" class="nav-item">
+          <i class="fas fa-binoculars"></i>
+          <span>Seguimiento</span>
+        </a>
+        <a href="tableros.html" class="nav-item">
+          <i class="fas fa-chart-bar"></i>
+          <span>Analiticas</span>
+        </a>
+        <a href="configuracion.html" class="nav-item">
+          <i class="fas fa-cog"></i>
+          <span>Configuracion</span>
+        </a>
+      </nav>
     </aside>
 
     <div class="main-content">
-        <div class="top-bar">
-            <h1 class="page-title" id="pageTitle">Leads</h1>
-            <div class="top-bar-right">
-                <div class="notification-icon">
-                    <i class="fas fa-bell"></i>
-                    <span class="notification-badge">0</span>
-                </div>
-                <div class="user-profile">
-                    <div class="profile-avatar">AC</div>
-                </div>
+      <div class="top-bar">
+        <h1 class="page-title" id="pageTitle">Leads</h1>
+        <div class="top-bar-right">
+          <div class="notification-icon">
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge">0</span>
+          </div>
+          <div class="user-profile">
+            <div class="profile-avatar">AC</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <section class="page-intro-card">
+          <div>
+            <h2>Hoja de vida 360 lista para Strapi</h2>
+            <p>
+              Los campos visibles ya quedaron estructurados para que el backend pueda
+              alimentar el CRM sin rediseñar esta vista.
+            </p>
+          </div>
+          <div class="intro-chip-group">
+            <span class="intro-chip" id="dataModeChip">Modo demo</span>
+            <span class="intro-chip">Lead 360</span>
+          </div>
+        </section>
+
+        <div class="leads-list-view" id="leadsListView">
+          <div class="leads-list-header">
+            <div class="leads-list-header-content">
+              <div>
+                <h2><i class="fas fa-list"></i> LEADS</h2>
+                <p>
+                  Filtra, abre y actualiza leads con estructura preparada para Strapi.
+                </p>
+              </div>
+              <button class="btn btn-primary" id="createLeadBtn" type="button">
+                <i class="fas fa-plus"></i> Nuevo lead
+              </button>
             </div>
+
+            <div class="toolbar-row">
+              <div class="search-field">
+                <i class="fas fa-search"></i>
+                <input
+                  id="leadSearchInput"
+                  type="text"
+                  placeholder="Buscar por nombre, programa, ciudad o asesor"
+                />
+              </div>
+              <select class="toolbar-select" id="leadStateFilter"></select>
+            </div>
+          </div>
+
+          <div class="leads-list-table">
+            <table>
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Lead</th>
+                  <th>Programa</th>
+                  <th>Fuente</th>
+                  <th>Asesor</th>
+                  <th class="th-center">Estado</th>
+                </tr>
+              </thead>
+              <tbody id="leadsTableBody"></tbody>
+            </table>
+          </div>
         </div>
 
-        <div class="content">
-            <section class="page-intro-card">
-                <div>
-                    <h2>Hoja de vida 360 lista para Strapi</h2>
-                    <p>Los campos visibles ya quedaron estructurados para que el backend pueda alimentar el CRM sin rediseñar esta vista.</p>
-                </div>
-                <div class="intro-chip-group">
-                    <span class="intro-chip" id="dataModeChip">Modo demo</span>
-                    <span class="intro-chip">Lead 360</span>
-                </div>
-            </section>
+        <div class="lead-create-modal" id="leadCreateModal">
+          <div class="modal-overlay" id="modalOverlay"></div>
 
-            <div class="leads-list-view" id="leadsListView">
-                <div class="leads-list-header">
-                    <div class="leads-list-header-content">
-                        <div>
-                            <h2><i class="fas fa-list"></i> LEADS</h2>
-                            <p>Filtra, abre y actualiza leads con estructura preparada para Strapi.</p>
-                        </div>
-                        <button class="btn btn-primary" id="createLeadBtn" type="button">
-                            <i class="fas fa-plus"></i> Nuevo lead
-                        </button>
-                    </div>
-
-                    <div class="toolbar-row">
-                        <div class="search-field">
-                            <i class="fas fa-search"></i>
-                            <input id="leadSearchInput" type="text" placeholder="Buscar por nombre, programa, ciudad o asesor">
-                        </div>
-                        <select class="toolbar-select" id="leadStateFilter"></select>
-                    </div>
-                </div>
-
-                <div class="leads-list-table">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th>Lead</th>
-                                <th>Programa</th>
-                                <th>Fuente</th>
-                                <th>Asesor</th>
-                                <th class="th-center">Estado</th>
-                            </tr>
-                        </thead>
-                        <tbody id="leadsTableBody"></tbody>
-                    </table>
-                </div>
+          <div class="modal-content modal-content-wide">
+            <div class="modal-header">
+              <h2>Crear nuevo lead</h2>
+              <button class="modal-close" id="modalCloseBtn" type="button">
+                <i class="fas fa-times"></i>
+              </button>
             </div>
 
-            <div class="lead-create-modal" id="leadCreateModal">
-                <div class="modal-overlay" id="modalOverlay"></div>
-
-                <div class="modal-content modal-content-wide">
-                    <div class="modal-header">
-                        <h2>Crear nuevo lead</h2>
-                        <button class="modal-close" id="modalCloseBtn" type="button">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-
-                    <div class="modal-body">
-                        <div class="lead-info-panel-modal">
-                            <div class="lead-avatar-section">
-                                <div class="lead-avatar-large" id="leadAvatar_create">--</div>
-                                <div class="lead-name-display" id="leadNameDisplay_create">Nuevo lead</div>
-                                <div class="lead-program-display" id="leadProgramDisplay_create">Completa los campos base</div>
-                            </div>
-
-                            <form id="leadFormCreate">
-                                <div class="form-grid">
-                                    <div class="form-group">
-                                        <label class="form-label">Nombres</label>
-                                        <input type="text" class="form-input" id="nombres_create">
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Apellidos</label>
-                                        <input type="text" class="form-input" id="apellidos_create">
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Programa</label>
-                                        <select class="form-input" id="programa_create"></select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Estado</label>
-                                        <select class="form-input" id="estado_create"></select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Cedula</label>
-                                        <input type="text" class="form-input" id="cedula_create">
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Celular</label>
-                                        <input type="tel" class="form-input" id="celular_create">
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Correo</label>
-                                        <input type="email" class="form-input" id="correo_create">
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Ciudad</label>
-                                        <input type="text" class="form-input" id="ciudad_create">
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Fuente</label>
-                                        <select class="form-input" id="fuente_create"></select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Asesor</label>
-                                        <select class="form-input" id="asesor_create"></select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Prioridad</label>
-                                        <select class="form-input" id="prioridad_create"></select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Ultimo contacto</label>
-                                        <input type="date" class="form-input" id="fecha_ultimo_contacto_create">
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Proxima accion</label>
-                                        <input type="date" class="form-input" id="fecha_proxima_accion_create">
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Tipo proxima accion</label>
-                                        <select class="form-input" id="tipo_proxima_accion_create"></select>
-                                    </div>
-                                    <div class="form-group form-group-full">
-                                        <label class="form-label">Notas</label>
-                                        <textarea class="form-input form-textarea" id="notas_create" rows="4"></textarea>
-                                    </div>
-                                </div>
-
-                                <div class="form-actions">
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-save"></i> Crear lead
-                                    </button>
-                                    <button type="button" class="btn btn-secondary" id="cancelBtnCreate">
-                                        Cancelar
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+            <div class="modal-body">
+              <div class="lead-info-panel-modal">
+                <div class="lead-avatar-section">
+                  <div class="lead-avatar-large" id="leadAvatar_create">--</div>
+                  <div class="lead-name-display" id="leadNameDisplay_create">
+                    Nuevo lead
+                  </div>
+                  <div class="lead-program-display" id="leadProgramDisplay_create">
+                    Completa los campos base
+                  </div>
                 </div>
-            </div>
 
-            <div class="lead-detail-view" id="leadDetailView">
-                <button class="btn-back-to-list" id="backToListBtn" type="button">
-                    <i class="fas fa-arrow-left"></i> Volver al listado
-                </button>
-
-                <div class="leads-container">
-                    <div class="lead-info-panel">
-                        <div class="lead-avatar-section">
-                            <div class="lead-avatar-large" id="leadAvatar">--</div>
-                            <div class="lead-name-display" id="leadNameDisplay">Nuevo lead</div>
-                            <div class="lead-program-display" id="leadProgramDisplay">Sin programa</div>
-                            <div class="meta-chip-group" id="leadMetaChips"></div>
-                        </div>
-
-                        <form id="leadForm">
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label class="form-label">Nombres</label>
-                                    <input type="text" class="form-input" id="nombres" disabled>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Apellidos</label>
-                                    <input type="text" class="form-input" id="apellidos" disabled>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Programa</label>
-                                    <select class="form-input" id="programa" disabled></select>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Estado</label>
-                                    <select class="form-input" id="estado" disabled></select>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Cedula</label>
-                                    <input type="text" class="form-input" id="cedula" disabled>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Celular</label>
-                                    <input type="tel" class="form-input" id="celular" disabled>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Correo</label>
-                                    <input type="email" class="form-input" id="correo" disabled>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Ciudad</label>
-                                    <input type="text" class="form-input" id="ciudad" disabled>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Fuente</label>
-                                    <select class="form-input" id="fuente" disabled></select>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Asesor</label>
-                                    <select class="form-input" id="asesor" disabled></select>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Prioridad</label>
-                                    <select class="form-input" id="prioridad" disabled></select>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Ultimo contacto</label>
-                                    <input type="date" class="form-input" id="fecha_ultimo_contacto" disabled>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Proxima accion</label>
-                                    <input type="date" class="form-input" id="fecha_proxima_accion" disabled>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Tipo proxima accion</label>
-                                    <select class="form-input" id="tipo_proxima_accion" disabled></select>
-                                </div>
-                                <div class="form-group form-group-full">
-                                    <label class="form-label">Notas</label>
-                                    <textarea class="form-input form-textarea" id="notas" rows="4" disabled></textarea>
-                                </div>
-                            </div>
-
-                            <div class="form-actions">
-                                <button type="button" class="btn btn-edit" id="editBtn">
-                                    <i class="fas fa-pencil-alt"></i> Editar
-                                </button>
-                                <button type="submit" class="btn btn-primary" id="saveBtn">
-                                    <i class="fas fa-save"></i> Guardar
-                                </button>
-                                <button type="button" class="btn btn-secondary" id="cancelBtn">
-                                    Cancelar
-                                </button>
-                            </div>
-                        </form>
+                <form id="leadFormCreate">
+                  <div class="form-grid">
+                    <div class="form-group">
+                      <label class="form-label">Nombres</label>
+                      <input type="text" class="form-input" id="nombres_create" />
                     </div>
-
-                    <div class="lead-timeline">
-                        <div class="timeline-header">
-                            <h2><i class="fas fa-history"></i> Trazabilidad</h2>
-                            <p>Resumen operativo y cronologia del lead listo para conectarse con Strapi.</p>
-                        </div>
-
-                        <div class="timeline-summary-grid">
-                            <article class="summary-mini-card">
-                                <span>Fuente</span>
-                                <strong id="leadDetailSource">Sin fuente</strong>
-                            </article>
-                            <article class="summary-mini-card">
-                                <span>Asesor</span>
-                                <strong id="leadDetailOwner">Sin asignar</strong>
-                            </article>
-                            <article class="summary-mini-card">
-                                <span>Prioridad</span>
-                                <strong id="leadDetailPriority">Media</strong>
-                            </article>
-                            <article class="summary-mini-card">
-                                <span>Proxima accion</span>
-                                <strong id="leadDetailNextAction">Sin proxima accion</strong>
-                            </article>
-                        </div>
-
-                        <div class="timeline-list" id="leadTimelineList"></div>
+                    <div class="form-group">
+                      <label class="form-label">Apellidos</label>
+                      <input type="text" class="form-input" id="apellidos_create" />
                     </div>
-                </div>
+                    <div class="form-group">
+                      <label class="form-label">Programa</label>
+                      <select class="form-input" id="programa_create"></select>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Estado</label>
+                      <select class="form-input" id="estado_create"></select>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Cedula</label>
+                      <input type="text" class="form-input" id="cedula_create" />
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Celular</label>
+                      <input type="tel" class="form-input" id="celular_create" />
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Correo</label>
+                      <input type="email" class="form-input" id="correo_create" />
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Ciudad</label>
+                      <input type="text" class="form-input" id="ciudad_create" />
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Fuente</label>
+                      <select class="form-input" id="fuente_create"></select>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Asesor</label>
+                      <select class="form-input" id="asesor_create"></select>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Prioridad</label>
+                      <select class="form-input" id="prioridad_create"></select>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Ultimo contacto</label>
+                      <input
+                        type="date"
+                        class="form-input"
+                        id="fecha_ultimo_contacto_create"
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Proxima accion</label>
+                      <input
+                        type="date"
+                        class="form-input"
+                        id="fecha_proxima_accion_create"
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Tipo proxima accion</label>
+                      <select class="form-input" id="tipo_proxima_accion_create"></select>
+                    </div>
+                    <div class="form-group form-group-full">
+                      <label class="form-label">Notas</label>
+                      <textarea
+                        class="form-input form-textarea"
+                        id="notas_create"
+                        rows="4"
+                      ></textarea>
+                    </div>
+                  </div>
+
+                  <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                      <i class="fas fa-save"></i> Crear lead
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="cancelBtnCreate">
+                      Cancelar
+                    </button>
+                  </div>
+                </form>
+              </div>
             </div>
+          </div>
         </div>
+
+        <div class="lead-detail-view" id="leadDetailView">
+          <button class="btn-back-to-list" id="backToListBtn" type="button">
+            <i class="fas fa-arrow-left"></i> Volver al listado
+          </button>
+
+          <div class="leads-container">
+            <div class="lead-info-panel">
+              <div class="lead-avatar-section">
+                <div class="lead-avatar-large" id="leadAvatar">--</div>
+                <div class="lead-name-display" id="leadNameDisplay">Nuevo lead</div>
+                <div class="lead-program-display" id="leadProgramDisplay">
+                  Sin programa
+                </div>
+                <div class="meta-chip-group" id="leadMetaChips"></div>
+              </div>
+
+              <form id="leadForm">
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label class="form-label">Nombres</label>
+                    <input type="text" class="form-input" id="nombres" disabled />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Apellidos</label>
+                    <input type="text" class="form-input" id="apellidos" disabled />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Programa</label>
+                    <select class="form-input" id="programa" disabled></select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Estado</label>
+                    <select class="form-input" id="estado" disabled></select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Cedula</label>
+                    <input type="text" class="form-input" id="cedula" disabled />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Celular</label>
+                    <input type="tel" class="form-input" id="celular" disabled />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Correo</label>
+                    <input type="email" class="form-input" id="correo" disabled />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Ciudad</label>
+                    <input type="text" class="form-input" id="ciudad" disabled />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Fuente</label>
+                    <select class="form-input" id="fuente" disabled></select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Asesor</label>
+                    <select class="form-input" id="asesor" disabled></select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Prioridad</label>
+                    <select class="form-input" id="prioridad" disabled></select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Ultimo contacto</label>
+                    <input
+                      type="date"
+                      class="form-input"
+                      id="fecha_ultimo_contacto"
+                      disabled
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Proxima accion</label>
+                    <input
+                      type="date"
+                      class="form-input"
+                      id="fecha_proxima_accion"
+                      disabled
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Tipo proxima accion</label>
+                    <select class="form-input" id="tipo_proxima_accion" disabled></select>
+                  </div>
+                  <div class="form-group form-group-full">
+                    <label class="form-label">Notas</label>
+                    <textarea
+                      class="form-input form-textarea"
+                      id="notas"
+                      rows="4"
+                      disabled
+                    ></textarea>
+                  </div>
+                </div>
+
+                <div class="form-actions">
+                  <button type="button" class="btn btn-edit" id="editBtn">
+                    <i class="fas fa-pencil-alt"></i> Editar
+                  </button>
+                  <button type="submit" class="btn btn-primary" id="saveBtn">
+                    <i class="fas fa-save"></i> Guardar
+                  </button>
+                  <button type="button" class="btn btn-secondary" id="cancelBtn">
+                    Cancelar
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <div class="lead-timeline">
+              <div class="timeline-header">
+                <h2><i class="fas fa-history"></i> Trazabilidad</h2>
+                <p>
+                  Resumen operativo y cronologia del lead listo para conectarse con
+                  Strapi.
+                </p>
+              </div>
+
+              <div class="timeline-summary-grid">
+                <article class="summary-mini-card">
+                  <span>Fuente</span>
+                  <strong id="leadDetailSource">Sin fuente</strong>
+                </article>
+                <article class="summary-mini-card">
+                  <span>Asesor</span>
+                  <strong id="leadDetailOwner">Sin asignar</strong>
+                </article>
+                <article class="summary-mini-card">
+                  <span>Prioridad</span>
+                  <strong id="leadDetailPriority">Media</strong>
+                </article>
+                <article class="summary-mini-card">
+                  <span>Proxima accion</span>
+                  <strong id="leadDetailNextAction">Sin proxima accion</strong>
+                </article>
+              </div>
+
+              <div class="timeline-list" id="leadTimelineList"></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <script>
-        window.CRM_CONFIG = {
-            strapiEnabled: false,
-            strapiBaseUrl: 'http://localhost:1337',
-            strapiApiPath: '/api',
-            endpoints: {
-                leads: 'leads'
-            },
-            leadWritableFields: ['nombres', 'apellidos', 'programa', 'cedula', 'celular', 'correo', 'ciudad', 'estado']
-        };
+      window.CRM_CONFIG = {
+        strapiEnabled: false,
+        strapiBaseUrl: "http://localhost:1337",
+        strapiApiPath: "/api",
+        endpoints: {
+          leads: "leads",
+        },
+        leadWritableFields: [
+          "nombres",
+          "apellidos",
+          "programa",
+          "cedula",
+          "celular",
+          "correo",
+          "ciudad",
+          "estado",
+        ],
+      };
     </script>
     <script src="funcionalidad.js"></script>
-</body>
+  </body>
 </html>
