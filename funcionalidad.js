@@ -114,7 +114,17 @@ const DEFAULT_SETTINGS = {
 };
 
 async function getPrograms() {
-  return DEFAULT_SETTINGS.programas;
+  const request = await fetch("https://strapi.ecpixcompany.com/api/programas", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization:
+        "Bearer 5df1a9e637ed81c2589aa624497e41847e16c0547f832c4c84fdf82ffca7f01a0d4fa06b789b5fa4367e4ead39c18d24748e847076b2b0579a0f92607fe1be09419c0fc880acecd1aa9c2c4994eebd698bfe0cc12634066204738ab1e542d20be4ba6dd1f06b48af303638dd7b43df0b3df175422d8a6a7185a49a1d22a4ec9b",
+    },
+  });
+
+  const response = await request.json();
+  return response.data.map((item) => item.nombre);
 }
 
 function createSeedActivity(tipo, titulo, descripcion, fecha, meta = []) {
@@ -2473,7 +2483,22 @@ function renderSettingsPage() {
   }
 }
 
-function bindLeadsModule() {
+async function createLead(data) {
+  const request = await fetch("https://strapi.ecpixcompany.com/api/leads", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization:
+        "Bearer 5df1a9e637ed81c2589aa624497e41847e16c0547f832c4c84fdf82ffca7f01a0d4fa06b789b5fa4367e4ead39c18d24748e847076b2b0579a0f92607fe1be09419c0fc880acecd1aa9c2c4994eebd698bfe0cc12634066204738ab1e542d20be4ba6dd1f06b48af303638dd7b43df0b3df175422d8a6a7185a49a1d22a4ec9b",
+    },
+    body: JSON.stringify(data),
+  });
+
+  const response = await request.json();
+  console.log("🐼 ~ response:", response);
+}
+
+async function bindLeadsModule() {
   const form = document.getElementById("leadForm");
   const createForm = document.getElementById("leadFormCreate");
 
@@ -2530,6 +2555,7 @@ function bindLeadsModule() {
 
   form?.addEventListener("submit", async (event) => {
     event.preventDefault();
+    console.log("🐼 ~ event:", event);
 
     const currentLead = getLeadById(CRM_STATE.currentLeadId);
     if (!currentLead) {
@@ -2573,6 +2599,28 @@ function bindLeadsModule() {
   createForm?.addEventListener("submit", async (event) => {
     event.preventDefault();
 
+    // obtenemos informacion del formulario
+    const formData = new FormData(event.target);
+    const data = Object.fromEntries(formData.entries());
+
+    // crear los datos validos para strapi
+    const newLead = {
+      NOMBRES: data.nombres,
+      APELLIDOS: data.apellidos,
+      NUMERO: data.celular,
+      CORREO: data.correo,
+      IDENTIFICACION: data.cedula,
+      FUENTE_CONTACTO: data.fuente,
+      CIUDAD: data.ciudad,
+      ASESOR: data.asesor,
+      programa: data.programa,
+      estado_del_lead: data.estado,
+    };
+    console.log("🐼 ~ newLead:", newLead);
+
+    await createLead(newLead);
+
+    /*
     const payload = getLeadFormPayload("create");
     const validationMessage = validateLeadPayload(payload);
     if (validationMessage) {
@@ -2597,6 +2645,7 @@ function bindLeadsModule() {
     renderAnalyticsPage();
     updateNotificationBadge();
     showToast("Lead creado con estructura compatible para Strapi.", "success");
+ */
   });
 }
 
