@@ -2,16 +2,10 @@ const CRM_STORAGE_KEYS = {
     leads: 'crm-unimeta-leads-v2',
     conversations: 'crm-unimeta-conversations-v2',
     settings: 'crm-unimeta-settings-v2',
+    statusMeta: 'crm-unimeta-status-meta-v2',
 };
 
-const CRM_STATUS_META = {
-    nuevo: { label: 'Nuevo', className: 'status-nuevo', icon: 'fa-star' },
-    interesado: { label: 'Interesado', className: 'status-interesado', icon: 'fa-bullseye' },
-    calificado: { label: 'Calificado', className: 'status-calificado', icon: 'fa-check' },
-    matriculado: { label: 'Matriculado', className: 'status-matriculado', icon: 'fa-user-graduate' },
-    perdido: { label: 'Perdido', className: 'status-perdido', icon: 'fa-xmark' },
-    inactivo: { label: 'Inactivo', className: 'status-inactivo', icon: 'fa-pause' },
-};
+let CRM_STATUS_META = {};
 
 const CRM_SOURCE_META = {
     whatsapp: 'WhatsApp',
@@ -104,223 +98,16 @@ const DEFAULT_SETTINGS = {
     ],
 };
 
-function createSeedActivity(tipo, titulo, descripcion, fecha, meta = []) {
-    return {
-        id: `${tipo}-${Math.random().toString(16).slice(2, 10)}`,
-        tipo,
-        titulo,
-        descripcion,
-        fecha,
-        meta,
-    };
-}
+const DEFAULT_STATUS_META = {};
 
-function createSeedMessage(tipo, texto, fecha) {
-    return {
-        id: `${tipo}-${Math.random().toString(16).slice(2, 10)}`,
-        tipo,
-        texto,
-        fecha,
-    };
-}
 
-const DEMO_LEADS = [
-    {
-        id: 'lead-001',
-        nombres: 'Maria Camila',
-        apellidos: 'Rodriguez',
-        programa: 'Administración de Empresas',
-        cedula: '1053847291',
-        celular: '+57 310 456 7890',
-        correo: 'maria.camila@email.com',
-        ciudad: 'Villavicencio',
-        estado: 'interesado',
-        fuente: 'whatsapp',
-        asesor: 'Andrea Cardenas',
-        prioridad: 'alta',
-        fecha_creacion: '2026-03-15T09:10:00-05:00',
-        fecha_ultimo_contacto: '2026-03-23T10:16:00-05:00',
-        fecha_proxima_accion: '2026-03-24T09:00:00-05:00',
-        tipo_proxima_accion: 'llamada',
-        notas: 'Interesada en becas regionales y en iniciar en el semestre B.',
-        actividades: [
-            createSeedActivity('message', 'Consulta por becas', 'Solicito informacion sobre becas institucionales.', '2026-03-23T10:14:00-05:00', ['WhatsApp', 'Alta intencion']),
-            createSeedActivity('call', 'Llamada de seguimiento', 'Se explicaron los requisitos y quedo agendada una llamada de cierre.', '2026-03-23T09:40:00-05:00', ['Andrea Cardenas']),
-            createSeedActivity('email', 'Envio de brochure', 'Se envio brochure financiero y plan de estudios.', '2026-03-22T17:05:00-05:00', ['Automatico']),
-        ],
-    },
-    {
-        id: 'lead-002',
-        nombres: 'Juan Andres',
-        apellidos: 'Martinez',
-        programa: 'Ingeniería de Sistemas',
-        cedula: '1087654321',
-        celular: '+57 311 234 5678',
-        correo: 'juan.andres@email.com',
-        ciudad: 'Acacias',
-        estado: 'nuevo',
-        fuente: 'formulario',
-        asesor: 'Sofia Perez',
-        prioridad: 'media',
-        fecha_creacion: '2026-03-22T08:30:00-05:00',
-        fecha_ultimo_contacto: '2026-03-22T08:30:00-05:00',
-        fecha_proxima_accion: '2026-03-23T14:30:00-05:00',
-        tipo_proxima_accion: 'whatsapp',
-        notas: 'Solicito horario nocturno y pensum.',
-        actividades: [
-            createSeedActivity('note', 'Lead creado desde formulario', 'Ingreso automatico desde landing de admisiones.', '2026-03-22T08:30:00-05:00', ['Formulario web']),
-        ],
-    },
-    {
-        id: 'lead-003',
-        nombres: 'Laura',
-        apellidos: 'Gonzalez Perez',
-        programa: 'Contaduría Pública',
-        cedula: '1023456789',
-        celular: '+57 312 567 8901',
-        correo: 'laura.gonzalez@email.com',
-        ciudad: 'Puerto Lopez',
-        estado: 'calificado',
-        fuente: 'whatsapp',
-        asesor: 'Carlos Ruiz',
-        prioridad: 'alta',
-        fecha_creacion: '2026-03-18T11:20:00-05:00',
-        fecha_ultimo_contacto: '2026-03-23T08:45:00-05:00',
-        fecha_proxima_accion: '2026-03-24T15:00:00-05:00',
-        tipo_proxima_accion: 'correo',
-        notas: 'Completo formulario y envio documentos basicos.',
-        actividades: [
-            createSeedActivity('message', 'Confirmacion de formulario', 'Aviso que ya completo el formulario institucional.', '2026-03-23T08:45:00-05:00', ['WhatsApp']),
-            createSeedActivity('note', 'Lead calificado', 'Cumple perfil y pasa a etapa de cierre.', '2026-03-22T12:10:00-05:00', ['Carlos Ruiz']),
-        ],
-    },
-    {
-        id: 'lead-004',
-        nombres: 'Carlos',
-        apellidos: 'Fernandez Ruiz',
-        programa: 'Derecho',
-        cedula: '1112233445',
-        celular: '+57 313 678 9012',
-        correo: 'carlos.fernandez@email.com',
-        ciudad: 'Bogota',
-        estado: 'interesado',
-        fuente: 'evento',
-        asesor: 'Andrea Cardenas',
-        prioridad: 'media',
-        fecha_creacion: '2026-03-17T15:00:00-05:00',
-        fecha_ultimo_contacto: '2026-03-22T16:10:00-05:00',
-        fecha_proxima_accion: '2026-03-25T10:00:00-05:00',
-        tipo_proxima_accion: 'visita',
-        notas: 'Confirmo asistencia a charla virtual del viernes.',
-        actividades: [
-            createSeedActivity('message', 'Confirmacion de evento', 'Acepto invitacion a charla virtual.', '2026-03-22T16:10:00-05:00', ['Evento']),
-            createSeedActivity('call', 'Primer contacto', 'Se resolvieron dudas generales de costos.', '2026-03-20T10:00:00-05:00', ['Andrea Cardenas']),
-        ],
-    },
-    {
-        id: 'lead-005',
-        nombres: 'Sandra',
-        apellidos: 'Lopez Moreno',
-        programa: 'Comunicación Social y Periodismo',
-        cedula: '1009988776',
-        celular: '+57 314 789 0123',
-        correo: 'sandra.lopez@email.com',
-        ciudad: 'Villavicencio',
-        estado: 'matriculado',
-        fuente: 'referidos',
-        asesor: 'Maria Rodriguez',
-        prioridad: 'alta',
-        fecha_creacion: '2026-03-05T09:10:00-05:00',
-        fecha_ultimo_contacto: '2026-03-21T09:00:00-05:00',
-        fecha_proxima_accion: '',
-        tipo_proxima_accion: '',
-        notas: 'Proceso cerrado con exito y documentacion completa.',
-        actividades: [
-            createSeedActivity('note', 'Matricula confirmada', 'Pago y documentos validados por admisiones.', '2026-03-21T09:00:00-05:00', ['Maria Rodriguez']),
-        ],
-    },
-    {
-        id: 'lead-006',
-        nombres: 'Paula',
-        apellidos: 'Garcia Diaz',
-        programa: 'Ingeniería Ambiental',
-        cedula: '1097766554',
-        celular: '+57 315 555 8877',
-        correo: 'paula.garcia@email.com',
-        ciudad: 'Granada',
-        estado: 'perdido',
-        fuente: 'meta_ads',
-        asesor: 'Sofia Perez',
-        prioridad: 'baja',
-        fecha_creacion: '2026-03-08T14:00:00-05:00',
-        fecha_ultimo_contacto: '2026-03-18T11:30:00-05:00',
-        fecha_proxima_accion: '',
-        tipo_proxima_accion: '',
-        notas: 'No continuo por presupuesto y decision familiar.',
-        actividades: [
-            createSeedActivity('note', 'Cierre perdido', 'Se registro motivo de perdida: presupuesto.', '2026-03-18T11:30:00-05:00', ['Sofia Perez']),
-        ],
-    },
-];
 
-const DEMO_CONVERSATIONS = [
-    {
-        id: 'conv-001',
-        lead_id: 'lead-001',
-        canal: 'WhatsApp',
-        etiqueta: 'Beca',
-        ultima_respuesta_minutos: 2,
-        sin_respuesta: false,
-        ultima_actualizacion: '2026-03-23T10:16:00-05:00',
-        mensajes: [
-            createSeedMessage('incoming', 'Hola, estoy interesada en conocer las becas disponibles para Administracion de Empresas.', '2026-03-23T10:14:00-05:00'),
-            createSeedMessage('outgoing', 'Claro, Maria Camila. Tenemos becas por rendimiento academico y convenios regionales.', '2026-03-23T10:15:00-05:00'),
-            createSeedMessage('incoming', 'Quisiera saber si aun puedo aplicar a beca para el proximo semestre.', '2026-03-23T10:16:00-05:00'),
-        ],
-    },
-    {
-        id: 'conv-002',
-        lead_id: 'lead-002',
-        canal: 'WhatsApp',
-        etiqueta: 'Pensum',
-        ultima_respuesta_minutos: 48,
-        sin_respuesta: true,
-        ultima_actualizacion: '2026-03-23T08:22:00-05:00',
-        mensajes: [
-            createSeedMessage('incoming', 'Me compartes informacion del plan de estudios y horario nocturno?', '2026-03-23T08:22:00-05:00'),
-        ],
-    },
-    {
-        id: 'conv-003',
-        lead_id: 'lead-003',
-        canal: 'WhatsApp',
-        etiqueta: 'Formulario',
-        ultima_respuesta_minutos: 12,
-        sin_respuesta: false,
-        ultima_actualizacion: '2026-03-23T08:45:00-05:00',
-        mensajes: [
-            createSeedMessage('incoming', 'Ya complete el formulario. Quedo atenta al siguiente paso.', '2026-03-23T08:45:00-05:00'),
-            createSeedMessage('outgoing', 'Perfecto, Laura. Enviaremos el siguiente paso a tu correo en el transcurso del dia.', '2026-03-23T08:52:00-05:00'),
-        ],
-    },
-    {
-        id: 'conv-004',
-        lead_id: 'lead-004',
-        canal: 'WhatsApp',
-        etiqueta: 'Evento',
-        ultima_respuesta_minutos: 25,
-        sin_respuesta: false,
-        ultima_actualizacion: '2026-03-22T16:10:00-05:00',
-        mensajes: [
-            createSeedMessage('incoming', 'Perfecto, puedo asistir a la charla virtual del viernes.', '2026-03-22T16:10:00-05:00'),
-            createSeedMessage('outgoing', 'Excelente, te enviaremos el enlace una hora antes del evento.', '2026-03-22T16:18:00-05:00'),
-        ],
-    },
-];
+
 
 const CRM_STATE = {
     dataMode: 'demo',
     settings: clone(DEFAULT_SETTINGS),
+    statusMeta: {},
     leads: [],
     conversations: [],
     currentLeadId: null,
@@ -347,6 +134,7 @@ function getRuntimeConfig() {
             leads: runtimeConfig.endpoints?.leads || runtimeConfig.strapiLeadsEndpoint || 'leads',
             conversations: runtimeConfig.endpoints?.conversations || '',
             settings: runtimeConfig.endpoints?.settings || '',
+            statusMeta: runtimeConfig.endpoints?.statusMeta || 'estado-del-lead',
         },
         leadWritableFields: runtimeConfig.leadWritableFields || defaultLeadFields,
         allowLocalFallback: runtimeConfig.allowLocalFallback ?? true,
@@ -358,12 +146,8 @@ function ensureLocalSeedData() {
         writeStorage(CRM_STORAGE_KEYS.settings, clone(DEFAULT_SETTINGS));
     }
 
-    if (!localStorage.getItem(CRM_STORAGE_KEYS.leads)) {
-        writeStorage(CRM_STORAGE_KEYS.leads, clone(DEMO_LEADS));
-    }
-
-    if (!localStorage.getItem(CRM_STORAGE_KEYS.conversations)) {
-        writeStorage(CRM_STORAGE_KEYS.conversations, clone(DEMO_CONVERSATIONS));
+    if (!localStorage.getItem(CRM_STORAGE_KEYS.statusMeta)) {
+        writeStorage(CRM_STORAGE_KEYS.statusMeta, clone(DEFAULT_STATUS_META));
     }
 }
 
@@ -571,8 +355,12 @@ function getLeadInitials(lead = {}) {
     return `${lead.nombres?.charAt(0) || ''}${lead.apellidos?.charAt(0) || ''}`.toUpperCase() || '--';
 }
 
-function getStatusMeta(status) {
-    return CRM_STATUS_META[status] || CRM_STATUS_META.nuevo;
+function getStatusMeta(status) { 
+    if (CRM_STATUS_META[status]) {
+        return CRM_STATUS_META[status];
+    }
+    // Fallback con valor por defecto si los datos aún no se han cargado desde Strapi
+    return CRM_STATUS_META.nuevo || { label: status || 'Nuevo', className: `status-${status || 'nuevo'}`, icon: 'fa-circle' };
 }
 
 function getPriorityMeta(priority) {
@@ -738,6 +526,42 @@ async function loadConversationCollection() {
 
 function loadSettingsCollection() {
     return normalizeSettings(readStorage(CRM_STORAGE_KEYS.settings, clone(DEFAULT_SETTINGS)));
+}
+
+async function loadStatusMetaFromStrapi() {
+    const config = getRuntimeConfig();
+    const localStatusMeta = readStorage(CRM_STORAGE_KEYS.statusMeta, {});
+
+    if (!config.strapiEnabled || !config.endpoints.statusMeta) {
+        return localStatusMeta;
+    }
+
+    try {
+        const response = await requestStrapi(`/${config.endpoints.statusMeta}`, {
+            query: 'pagination[pageSize]=200',
+        });
+        const rows = Array.isArray(response?.data) ? response.data : [];
+        
+        // Transformar datos de Strapi a objeto CRM_STATUS_META
+        const statusMetaObj = {};
+        rows.forEach((item) => {
+            const attributes = item.attributes || item;
+            const nombre = attributes.nombre_estado || attributes.nombre || attributes.label;
+            const clave = normalizeText(nombre).replace(/\s+/g, '_');
+            
+            statusMetaObj[clave] = {
+                label: nombre,
+                className: `status-${clave}`,
+                icon: attributes.icon || 'fa-circle',
+            };
+        });
+        
+        writeStorage(CRM_STORAGE_KEYS.statusMeta, statusMetaObj);
+        return statusMetaObj;
+    } catch (error) {
+        console.warn('No fue posible cargar statusMeta desde Strapi. Se usaran datos en cache.', error);
+        return localStatusMeta;
+    }
 }
 
 function replaceLeadInState(lead) {
@@ -1025,7 +849,7 @@ function getLeadFormPayload(prefix = '') {
         fecha_proxima_accion: document.getElementById(`fecha_proxima_accion${suffix}`)?.value || '',
         tipo_proxima_accion: document.getElementById(`tipo_proxima_accion${suffix}`)?.value || '',
         notas: document.getElementById(`notas${suffix}`)?.value.trim() || '',
-        actividades: prefix === 'create' ? [createSeedActivity('note', 'Lead creado', 'Registro creado desde el frontend listo para Strapi.', new Date().toISOString(), ['Frontend CRM'])] : getLeadById(CRM_STATE.currentLeadId)?.actividades || [],
+        actividades: prefix === 'create' ? [{\n            id: createId('activity'),\n            tipo: 'note',\n            titulo: 'Lead creado',\n            descripcion: 'Registro creado desde el frontend CRM.',\n            fecha: new Date().toISOString(),\n            meta: ['Frontend CRM'],\n        }] : getLeadById(CRM_STATE.currentLeadId)?.actividades || [],
     });
 }
 
@@ -2290,6 +2114,8 @@ function resetDemoData() {
 async function loadCRMData() {
     ensureLocalSeedData();
     CRM_STATE.settings = loadSettingsCollection();
+    CRM_STATE.statusMeta = await loadStatusMetaFromStrapi();
+    CRM_STATUS_META = CRM_STATE.statusMeta;
     CRM_STATE.leads = await loadLeadsCollection();
     CRM_STATE.conversations = await loadConversationCollection();
 }
