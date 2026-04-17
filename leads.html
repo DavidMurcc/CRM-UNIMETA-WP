@@ -439,12 +439,15 @@
 
     <script>
       window.CRM_CONFIG = {
-        strapiEnabled: false,
-        strapiBaseUrl: "http://localhost:1337",
+        strapiEnabled: true,
+        strapiBaseUrl: "https://strapi.ecpixcompany.com",
         strapiApiPath: "/api",
+        strapiToken:
+          "a1effdaf44dace2ba7c078722127ba37648f16871b47a84013b89643480ca8f78c58b16fbbd8de0df59fb845abc79f88eaf711ece93949fbd417806f805b192749d4bb4aeefa8d75fb56e63f72e61b1e2815e8427868676615d094994c00c99c5b8951daddccc44a9897d1bcae512c777d14a3080730508ed354dc9cb3ae9fa0",
         endpoints: {
           leads: "leads",
         },
+        allowLocalFallback: true,
         leadWritableFields: [
           "nombres",
           "apellidos",

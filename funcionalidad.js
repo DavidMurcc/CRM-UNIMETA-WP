@@ -555,6 +555,29 @@ function readField(source, keys, defaultValue = "") {
   return defaultValue;
 }
 
+function getRelationDisplayValue(value, fallbackKeys = []) {
+  if (!value) {
+    return "";
+  }
+
+  if (typeof value === "string") {
+    return value;
+  }
+
+  if (Array.isArray(value)) {
+    return value
+      .map((item) => getRelationDisplayValue(item, fallbackKeys))
+      .filter(Boolean)
+      .join(", ");
+  }
+
+  if (typeof value === "object") {
+    return readField(value, fallbackKeys, "");
+  }
+
+  return "";
+}
+
 // Normaliza texto eliminando acentos y convirtiéndolo a minúsculas para búsquedas
 function normalizeText(value) {
   return String(value || "")
@@ -610,20 +633,30 @@ function normalizeLead(item = {}) {
         .map(normalizeActivity)
         .sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
     : [];
+  const programa = getRelationDisplayValue(source.programa, ["nombre", "NOMBRE"]) || readField(
+    source,
+    ["programa", "program", "programa_academico"],
+  );
+  const estado =
+    getRelationDisplayValue(source.estado_del_lead, [
+      "NOMBRE_ESTADO",
+      "nombre",
+      "estado",
+    ]) || readField(source, ["estado", "status"], "nuevo");
 
   return {
     id: String(readField(source, ["id", "documentId"], createId("lead"))),
     documentId: readField(source, ["documentId"], ""),
-    nombres: readField(source, ["nombres", "nombre", "firstName"]),
-    apellidos: readField(source, ["apellidos", "apellido", "lastName"]),
-    programa: readField(source, ["programa", "program", "programa_academico"]),
-    cedula: readField(source, ["cedula", "documento", "identificacion"]),
-    celular: readField(source, ["celular", "telefono", "phone"]),
-    correo: readField(source, ["correo", "email", "mail"]),
-    ciudad: readField(source, ["ciudad", "city"]),
-    estado: readField(source, ["estado", "status"], "nuevo"),
-    fuente: readField(source, ["fuente", "source"], "formulario"),
-    asesor: readField(source, ["asesor", "asesor_asignado", "owner"], ""),
+    nombres: readField(source, ["nombres", "nombre", "firstName", "NOMBRES"]),
+    apellidos: readField(source, ["apellidos", "apellido", "lastName", "APELLIDOS"]),
+    programa,
+    cedula: readField(source, ["cedula", "documento", "identificacion", "IDENTIFICACION"]),
+    celular: readField(source, ["celular", "telefono", "phone", "NUMERO"]),
+    correo: readField(source, ["correo", "email", "mail", "CORREO"]),
+    ciudad: readField(source, ["ciudad", "city", "CIUDAD"]),
+    estado,
+    fuente: readField(source, ["fuente", "source", "FUENTE_CONTACTO"], "formulario"),
+    asesor: readField(source, ["asesor", "asesor_asignado", "owner", "ASESOR"], ""),
     prioridad: readField(source, ["prioridad", "priority"], "media"),
     fecha_creacion: readField(source, ["fecha_creacion", "createdAt"], ""),
     fecha_ultimo_contacto: readField(
@@ -983,7 +1016,7 @@ async function loadLeadsCollection() {
 
   try {
     const response = await requestStrapi(`/${config.endpoints.leads}`, {
-      query: "pagination[pageSize]=200&sort=updatedAt:desc",
+      query: "pagination[pageSize]=200&sort=updatedAt:desc&populate=*",
     });
     const rows = Array.isArray(response?.data) ? response.data : [];
     const remoteLeads = rows.map(normalizeLead);
@@ -1049,14 +1082,18 @@ function replaceConversationInState(conversation) {
 
 // [OBTENER-DATOS] Construye payload de lead para enviar a Strapi
 function buildLeadPayloadForStrapi(lead) {
-  const config = getRuntimeConfig();
-  const payload = {};
-
-  config.leadWritableFields.forEach((field) => {
-    payload[field] = lead[field] ?? "";
-  });
-
-  return payload;
+  return {
+    NOMBRES: lead.nombres ?? "",
+    APELLIDOS: lead.apellidos ?? "",
+    NUMERO: lead.celular ?? "",
+    CORREO: lead.correo ?? "",
+    IDENTIFICACION: lead.cedula ?? "",
+    FUENTE_CONTACTO: lead.fuente ?? "",
+    CIUDAD: lead.ciudad ?? "",
+    ASESOR: lead.asesor ?? "",
+    programa: lead.programa ?? "",
+    estado_del_lead: lead.estado ?? "nuevo",
+  };
 }
 
 // [OBTENER-DATOS] Guarda lead en Strapi o localStorage (ambos modos)
@@ -1659,27 +1696,7 @@ async function renderLeadsList() {
   }
 
   clearElement(tableBody);
-
-  // const leadss = sortByNewest(getFilteredLeads(), "fecha_ultimo_contacto");
-  // se comento para no borrar la antigua funcionalidad
-
-  // se llama a la api de strapi para obtener los datos
-  const leads_strapi = await getLeadsByStrapi();
-
-  // normalizamos para que los datos de strapi se adapten al antiguo sistema de visualizacion
-  const leads_normalized = leads_strapi.map((item) => {
-    return {
-      nombres: item.NOMBRES,
-      apellido: item.APELLIDOS,
-      correo: item.CORREO,
-      celular: item.NUMERO,
-      programa: item.programa?.nombre ?? "Sin programa",
-      estado: item.estado_del_lead?.NOMBRE_ESTADO ?? "nuevo",
-    };
-  });
-
-  // guardamos lo que normalizamos para no modificar la base antigua.
-  const leads = leads_normalized;
+  const leads = sortByNewest(getFilteredLeads(), "fecha_ultimo_contacto");
 
   if (!leads.length) {
     const row = document.createElement("tr");
@@ -1752,6 +1769,48 @@ function openCreateLeadModal() {
 // [CONTROLADOR] Cierra modal de creación
 function closeCreateLeadModal() {
   document.getElementById("leadCreateModal")?.classList.remove("active");
+}
+
+function bindLeadCreateSubmitOverride() {
+  const createForm = document.getElementById("leadFormCreate");
+  if (!createForm || createForm.dataset.submitOverrideBound === "true") {
+    return;
+  }
+
+  createForm.dataset.submitOverrideBound = "true";
+  createForm.addEventListener(
+    "submit",
+    async (event) => {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+
+      const payload = getLeadFormPayload("create");
+      const validationMessage = validateLeadPayload(payload);
+      if (validationMessage) {
+        showToast(validationMessage, "warning");
+        return;
+      }
+
+      const savedLead = await saveLead(
+        {
+          ...payload,
+          fecha_creacion: new Date().toISOString(),
+          fecha_ultimo_contacto: payload.fecha_ultimo_contacto || new Date().toISOString(),
+        },
+        "create",
+      );
+
+      closeCreateLeadModal();
+      renderLeadsList();
+      openLeadDetail(savedLead.id);
+      renderDashboard();
+      renderPipelineBoard();
+      renderAnalyticsPage();
+      updateNotificationBadge();
+      showToast("Lead creado y sincronizado con Strapi.", "success");
+    },
+    true,
+  );
 }
 
 // [MOSTRAR-DATOS] Renderiza dashboard completo
@@ -2808,6 +2867,7 @@ function initLeadsPage() {
     "Todos los estados",
   );
   bindLeadsModule();
+  bindLeadCreateSubmitOverride();
   renderLeadsList();
 
   const params = new URLSearchParams(window.location.search);
